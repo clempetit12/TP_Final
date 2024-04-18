@@ -10,7 +10,9 @@ public class Employee {
     @Id
     private Long id;
 
+    private String jobTitle;
 
+    private int age;
 
     public void setId(Long id) {
         this.id = id;
