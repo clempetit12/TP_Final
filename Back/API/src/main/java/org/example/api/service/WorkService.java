@@ -1,6 +1,7 @@
 package org.example.api.service;
 
 import org.example.api.entity.Clocking;
+import org.example.api.entity.DateUtil;
 import org.example.api.entity.Employee;
 import org.example.api.entity.WorkTime;
 import org.example.api.repository.WorkRepository;
@@ -25,20 +26,21 @@ public class WorkService {
        return hours;
     }
 
-    public long getHoursPerWeekNumberForOneEmployee(LocalDate date1, LocalDate date2, Long id) {
-        long hours =sumHoursBetweenDatesForEmployee(date1,date2, id).toHours();
-        return hours;
+    public long getHoursPerWeekNumberForOneEmployee(int year, int weekNumber, Long id) {
+        LocalDate firstDayOfWeek = DateUtil.getFirstDayOfWeekForYearAndWeekNumber(year, weekNumber);
+        LocalDate lastDayOfWeek = firstDayOfWeek.plusDays(6);
+        return getHoursPerWeekForOneEmployee(firstDayOfWeek, lastDayOfWeek, id);
     }
 
     public long getHoursPerDayForOneEmployee(LocalDate date,Long id) {
-        long hours =  workRepository.sumHoursBetweenDatesForEmployee(date, id).toHours();
+        LocalDate startDate = date.atStartOfDay().toLocalDate();
+        long hours = sumHoursBetweenDatesForEmployee(startDate, startDate, id).toHours();
         return hours;
     }
 
-    public long getOvertimePerDay(LocalDate date,LocalTime clickIn, LocalTime clickOut, Long id) {
-        long workDuration = Duration.between(clickIn,clickOut).toHours();
-        long regularHoursDuration = getHoursPerDayForOneEmployee(date,id);
-        long overtimeDuration = workDuration - regularHoursDuration;
+    public long getOvertimePerDay(LocalDate date, Long id) {
+        long hours = getHoursPerDayForOneEmployee(date, id);
+        long overtimeDuration = hours - 7 ;
         if(overtimeDuration < 0) {
             overtimeDuration = 0;
         }
@@ -48,25 +50,20 @@ public class WorkService {
     }
 
     public long getOvertimePerWeek(LocalDate date1, LocalDate date2, Long id) {
+            long totalOvertime = 0;
 
-        long totalWorkDuration = 0;
-        LocalDate currentDay = date1;
+            LocalDate currentDate = date1;
+            while (!currentDate.isAfter(date2)) {
+                long overtime = getOvertimePerDay(currentDate, id);
+                totalOvertime += overtime;
 
-        while (!currentDay.isAfter(date2)) {
-            if (currentDay.getDayOfWeek() != DayOfWeek.SATURDAY && currentDay.getDayOfWeek() != DayOfWeek.SUNDAY) {
-                totalWorkDuration += getHoursPerDayForOneEmployee(currentDay, id);
+                currentDate = currentDate.plusDays(1);
             }
-            currentDay = currentDay.plusDays(1);
+
+            return totalOvertime;
         }
 
-        long regularHoursDuration = getHoursPerWeekForOneEmployee(date1,date2,id);
-        long overtimeDuration = totalWorkDuration - regularHoursDuration;
-        if (overtimeDuration < 0) {
-            overtimeDuration = 0;
-        }
 
-        return overtimeDuration;
-    }
 
 
     public WorkTime saveWorkTime(WorkTime workTime) {

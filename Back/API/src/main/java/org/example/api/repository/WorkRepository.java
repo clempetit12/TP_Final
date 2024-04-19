@@ -17,6 +17,4 @@ public interface WorkRepository extends JpaRepository<WorkTime, Long> {
 
     List<WorkTime> findByDateBetweenAndEmployeeId(LocalDate date1, LocalDate date2, Long id);
 
-    @Query("SELECT SUM(w.hour) FROM WorkTime w WHERE w.date =:date  AND w.employee.id = :id")
-    Duration sumHoursBetweenDatesForEmployee(LocalDate date, Long id);
 }

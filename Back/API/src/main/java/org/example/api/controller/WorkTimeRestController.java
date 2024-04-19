@@ -26,33 +26,31 @@ public class WorkTimeRestController {
     private EmployeeService employeeService;
 
 
-    @GetMapping("/hoursPerWeek/{id}")
-public long getHourPerWeek(@PathVariable Long id, @RequestParam  LocalDate date1, @RequestParam  LocalDate date2) {
+    @GetMapping("/hoursByDate/{id}")
+public long getHourPerBetweenTwoDates(@PathVariable Long id, @RequestParam  LocalDate date1, @RequestParam  LocalDate date2) {
         return workService.getHoursPerWeekForOneEmployee(date1,date2,id);
 
 
     }
 
     @GetMapping("/hoursPerWeekNumber/{id}")
-    public long getHourPerWeekNumber(@PathVariable Long id,int weekNumber) {
-        LocalDate firstDayOfWeek = DateUtil.getFirstDayOfWeekForYearAndWeekNumber(Year.now().getValue(), weekNumber);
-        LocalDate lastDayOfWeek = firstDayOfWeek.plusDays(6);
-        return workService.getHoursPerWeekNumberForOneEmployee(firstDayOfWeek, lastDayOfWeek, id);
+    public long getHourPerWeekNumber(@PathVariable Long id,@RequestParam  int weekNumber, @RequestParam int year) {
+        return workService.getHoursPerWeekNumberForOneEmployee(year, weekNumber,id);
     }
 
 
     @GetMapping("/hoursPerDay/{id}")
-    public long getHourPerDay(@PathVariable Long id,LocalDate date) {
+    public long getHourPerDay(@PathVariable Long id,@RequestParam  LocalDate date) {
         return workService.getHoursPerDayForOneEmployee(date,id);
     }
 
     @GetMapping("/overtimePerday/{id}")
-    public long getOvertimePerDay (@PathVariable Long id,LocalDate date,LocalTime clickIn,LocalTime clickOut) {
-        return workService.getOvertimePerDay(date,clickIn, clickOut, id);
+    public long getOvertimePerDay (@PathVariable Long id,@RequestParam  LocalDate date) {
+        return workService.getOvertimePerDay( date, id);
     }
 
     @GetMapping("/overtimePerWeek/{id}")
-    public long getOvertimePerWeek (@PathVariable Long id, LocalDate date1,LocalDate date2) {
+    public long getOvertimePerWeek (@PathVariable Long id, @RequestParam LocalDate date1, @RequestParam LocalDate date2) {
         return workService.getOvertimePerWeek(date1,date2, id);
     }
 
