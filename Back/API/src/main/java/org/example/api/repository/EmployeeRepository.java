@@ -3,7 +3,9 @@ package org.example.api.repository;
 import org.example.api.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EmployeeRepository extends JpaRepository<Long, Employee> {
+import java.util.Optional;
 
-    Employee findById(Long id);
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+
+     Optional<Employee> findById(Long id);
 }

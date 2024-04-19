@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/workTime")
@@ -21,11 +22,12 @@ public class WorkTimeRestController {
     @Autowired
     private WorkService workService;
 
+    @Autowired
     private EmployeeService employeeService;
 
 
     @GetMapping("/hoursPerWeek/{id}")
-public long getHourPerWeek(@PathVariable Long id, LocalDate date1, LocalDate date2) {
+public long getHourPerWeek(@PathVariable Long id, @RequestParam  LocalDate date1, @RequestParam  LocalDate date2) {
         return workService.getHoursPerWeekForOneEmployee(date1,date2,id);
 
 
@@ -55,10 +57,16 @@ public long getHourPerWeek(@PathVariable Long id, LocalDate date1, LocalDate dat
     }
 
     @PostMapping("/addWorkTime/{id}")
-    public void addClocking (@PathVariable Long id, LocalDate date, LocalTime time, Clocking clocking) {
+    public WorkTime addClocking (@PathVariable Long id, @RequestParam String clocking) {
         Employee employee = employeeService.getEmployeeById(id);
-        WorkTime workTime = WorkTime.builder().employee(employee).date(date).clocking(clocking).hour(time).build();
-        workService.saveWorkTime(workTime);
+
+        LocalTime currentTime = LocalTime.now();
+        LocalDate currentDate = LocalDate.now();
+
+        Clocking clockingEnum = Clocking.valueOf(clocking);
+
+        WorkTime workTime = WorkTime.builder().employee(employee).date(currentDate).clocking(clockingEnum).hour(currentTime).build();
+      return workService.saveWorkTime(workTime);
     }
 
 

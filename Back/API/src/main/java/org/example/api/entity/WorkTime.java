@@ -1,9 +1,6 @@
 package org.example.api.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,9 +16,11 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class WorkTime {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private LocalTime hour;
+    @Enumerated(EnumType.STRING)
     private Clocking clocking;
     private LocalDate date;
 
