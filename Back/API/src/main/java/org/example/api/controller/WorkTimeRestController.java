@@ -4,6 +4,7 @@ import org.example.api.entity.Clocking;
 import org.example.api.entity.DateUtil;
 import org.example.api.entity.Employee;
 import org.example.api.entity.WorkTime;
+import org.example.api.service.EmployeeService;
 import org.example.api.service.WorkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class WorkTimeRestController {
 
     @Autowired
     private WorkService workService;
+
+    private EmployeeService employeeService;
 
 
     @GetMapping("/hoursPerWeek/{id}")
@@ -53,9 +56,9 @@ public long getHourPerWeek(@PathVariable Long id, LocalDate date1, LocalDate dat
 
     @PostMapping("/addWorkTime/{id}")
     public void addClocking (@PathVariable Long id, LocalDate date, LocalTime time, Clocking clocking) {
-
-        WorkTime workTime = WorkTime.builder().id(id).date(date).clocking(clocking).hour(time).build();
-        workService.save(workTime);
+        Employee employee = employeeService.getEmployeeById(id);
+        WorkTime workTime = WorkTime.builder().employee(employee).date(date).clocking(clocking).hour(time).build();
+        workService.saveWorkTime(workTime);
     }
 
 
