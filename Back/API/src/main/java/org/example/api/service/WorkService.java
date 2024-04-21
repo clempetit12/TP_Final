@@ -88,6 +88,48 @@ public class WorkService {
         return totalDuration;
     }
 
+
+
+    public List<WorkTime> getallWorkTime(LocalDate date1, LocalDate date2, Long id) {
+        return workRepository.findByDateBetweenAndEmployeeId(date1,date2,id);
+    }
+
+    public Duration calculateTotalWorkHours(List<WorkTime> workTimes) {
+        Duration totalDuration = Duration.ZERO;
+
+        for (WorkTime workTime : workTimes) {
+            if (workTime.getClocking() == Clocking.IN) {
+                WorkTime nextWorkTime = getNextWorkTime(workTimes, workTime);
+                if (nextWorkTime != null && nextWorkTime.getClocking() == Clocking.OUT) {
+                    Duration duration = Duration.between(workTime.getHour(), nextWorkTime.getHour());
+                    totalDuration = totalDuration.plus(duration);
+                }
+            }
+        }
+
+        return totalDuration;
+    }
+
+    public Duration calculateTotalOvertimeHours(List<WorkTime> workTimes) {
+        Duration totalOvertimeDuration = Duration.ZERO;
+
+        for (WorkTime workTime : workTimes) {
+            if (workTime.getClocking() == Clocking.IN) {
+                WorkTime nextWorkTime = getNextWorkTime(workTimes, workTime);
+                if (nextWorkTime != null && nextWorkTime.getClocking() == Clocking.OUT) {
+                    Duration duration = Duration.between(workTime.getHour(), nextWorkTime.getHour());
+                    // Vérifier si la durée dépasse 7 heures (heures régulières)
+                    if (duration.toHours() > 7) {
+                        // Ajouter les heures supplémentaires au total
+                        totalOvertimeDuration = totalOvertimeDuration.plus(duration.minusHours(7)); // Heures supplémentaires = Durée - 7 heures régulières
+                    }
+                }
+            }
+        }
+
+        return totalOvertimeDuration;
+    }
+
     private WorkTime getNextWorkTime(List<WorkTime> workTimes, WorkTime currentWorkTime) {
         int currentIndex = workTimes.indexOf(currentWorkTime);
         if (currentIndex < workTimes.size() - 1) {
@@ -97,7 +139,11 @@ public class WorkService {
         }
     }
 
-    public List<WorkTime> getallWorkTime(LocalDate date1, LocalDate date2, Long id) {
-        return workRepository.findByDateBetweenAndEmployeeId(date1,date2,id);
+    public WorkTime getfirstClockIn(Clocking clocking,LocalDate date, long employeeId) {
+        return workRepository.findTopByClockingAndDateAndEmployeeIdOrderByHourAsc(clocking,date,employeeId).orElse(null);
+    }
+
+    public WorkTime getLastClockOut(Clocking clocking,LocalDate date, long employeeId) {
+        return workRepository.findTopByClockingAndDateAndEmployeeIdOrderByHourDesc(clocking,date,employeeId).orElse(null);
     }
 }

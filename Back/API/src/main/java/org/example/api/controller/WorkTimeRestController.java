@@ -1,9 +1,6 @@
 package org.example.api.controller;
 
-import org.example.api.entity.Clocking;
-import org.example.api.entity.DateUtil;
-import org.example.api.entity.Employee;
-import org.example.api.entity.WorkTime;
+import org.example.api.entity.*;
 import org.example.api.service.EmployeeService;
 import org.example.api.service.WorkService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,19 +38,19 @@ public long getHourPerBetweenTwoDates(@PathVariable Long id, @RequestParam  Loca
     }
 
     // Méthode pour récupérer le nombre d'heures travaillées un jour donné (en fonction d'une date)
-    @GetMapping("/hoursPerDay/{id}")
+
     public long getHourPerDay(@PathVariable Long id,@RequestParam  LocalDate date) {
         return workService.getHoursPerDayForOneEmployee(date,id);
     }
 
     // Méthode pour récupérer le nombre d'heures supplémentaires travaillées un jour donné (en fonction d'une date)
-    @GetMapping("/overtimePerday/{id}")
+
     public long getOvertimePerDay (@PathVariable Long id,@RequestParam  LocalDate date) {
         return workService.getOvertimePerDay( date, id);
     }
 
     // Méthode pour récupérer le nombre d'heures supplémentaires travaillées entre deux dates
-    @GetMapping("/overtimePerWeek/{id}")
+
     public long getOvertimePerWeek (@PathVariable Long id, @RequestParam LocalDate date1, @RequestParam LocalDate date2) {
         return workService.getOvertimePerWeek(date1,date2, id);
     }
@@ -74,11 +71,72 @@ public long getHourPerBetweenTwoDates(@PathVariable Long id, @RequestParam  Loca
 
     //Méthode pour récupérer la liste des workTime d'un employé entre deux date (les horaires)
     @GetMapping("/allWorkTilePerEmployee/{id}")
-    public List<WorkTime> getAllWorkime (@PathVariable Long id, @RequestParam LocalDate date1, @RequestParam LocalDate date2) {
+    public List<WorkTime> getAllWorkTime (@PathVariable Long id, @RequestParam LocalDate date1, @RequestParam LocalDate date2) {
         return workService.getallWorkTime(date1,date2, id);
     }
 
+    @GetMapping("/weeklySummary")
+    public WeeklySummary getWeeklySummary(@RequestParam int weekNumber, @RequestParam Long employeeId) {
+        LocalDate firstDayOfWeek = DateUtil.getFirstDayOfWeekForYearAndWeekNumber(2024, weekNumber);
+        LocalDate lastDayOfWeek = firstDayOfWeek.plusDays(6);
+        LocalDate day = firstDayOfWeek;
+        List<DaySummary> daySummaries = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
 
+            DaySummary daySummary = new DaySummary();
+            daySummary.setDay(day.getDayOfWeek().toString());
+
+            LocalTime startTime = getFirstClockIn(Clocking.IN,day,employeeId);
+            LocalTime endTime = getLastClockOut(Clocking.OUT,day,employeeId);
+            if (startTime != null) {
+                daySummary.setStartTime(startTime.toString());
+            } else {
+                daySummary.setStartTime("");
+            }
+            if (endTime != null) {
+                daySummary.setEndTime(endTime.toString());
+            } else {
+                daySummary.setEndTime("");
+            }
+
+            long totalHour = getHourPerDay(employeeId,day);
+            long totalOverTime = getOvertimePerDay(employeeId,day);
+            daySummary.setTotalHour(totalHour);
+            daySummary.setTotalOvertime(totalOverTime);
+            daySummaries.add(daySummary);
+            day = day.plusDays(1);
+
+
+        }
+        List<WorkTime> workTimes = workService.getallWorkTime(firstDayOfWeek, lastDayOfWeek, employeeId);
+        long totalWorkHours = workService.calculateTotalWorkHours(workTimes).toHours();
+        long totalOvertimeHours = workService.calculateTotalOvertimeHours(workTimes).toHours();
+
+
+        WeeklySummary weeklySummary = new WeeklySummary();
+        weeklySummary.setDaySummaries(daySummaries);
+        weeklySummary.setTotalWorkHours(totalWorkHours);
+        weeklySummary.setTotalOvertimeHours(totalOvertimeHours);
+
+        return weeklySummary;
+    }
+
+
+    public LocalTime getFirstClockIn (Clocking clocking,LocalDate date, long employeeId) {
+        WorkTime workTime = workService.getfirstClockIn(clocking,date,employeeId);
+        if (workTime != null){
+            return workTime.getHour();
+        }else {
+            return null;
+        }
+    }
+    public LocalTime getLastClockOut (Clocking clocking,LocalDate date, long employeeId) {
+        WorkTime workTime = workService.getLastClockOut(clocking,date,employeeId);
+        if (workTime != null){
+            return workTime.getHour();
+        }else {
+            return null;
+        }    }
 
 
 }

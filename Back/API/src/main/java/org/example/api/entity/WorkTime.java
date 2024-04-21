@@ -49,7 +49,7 @@ public class WorkTime {
                 ", hour=" + hour +
                 ", clocking=" + clocking +
                 ", date=" + date +
-                ", employee=" + employee +
+                ", employee=" + employee.getEmail() +
                 '}';
     }
 }
