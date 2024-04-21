@@ -1,5 +1,6 @@
 package org.example.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,7 +25,8 @@ public class Employee {
 
     private Role role;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<WorkTime> workTimes;
 
 
@@ -34,5 +36,12 @@ public class Employee {
 
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                '}';
     }
 }

@@ -26,6 +26,7 @@ public class WorkTimeRestController {
     private EmployeeService employeeService;
 
 
+    // Méthode pour récupérer le nombre d'heures travaillées entre deux dates
     @GetMapping("/hoursByDate/{id}")
 public long getHourPerBetweenTwoDates(@PathVariable Long id, @RequestParam  LocalDate date1, @RequestParam  LocalDate date2) {
         return workService.getHoursPerWeekForOneEmployee(date1,date2,id);
@@ -33,27 +34,31 @@ public long getHourPerBetweenTwoDates(@PathVariable Long id, @RequestParam  Loca
 
     }
 
+    // Méthode pour récupérer le nombre d'heures travaillées selon un numéro de semaine
     @GetMapping("/hoursPerWeekNumber/{id}")
-    public long getHourPerWeekNumber(@PathVariable Long id,@RequestParam  int weekNumber, @RequestParam int year) {
-        return workService.getHoursPerWeekNumberForOneEmployee(year, weekNumber,id);
+    public long getHourPerWeekNumber(@PathVariable Long id,@RequestParam  int weekNumber) {
+        return workService.getHoursPerWeekNumberForOneEmployee(2024, weekNumber,id);
     }
 
-
+    // Méthode pour récupérer le nombre d'heures travaillées un jour donné (en fonction d'une date)
     @GetMapping("/hoursPerDay/{id}")
     public long getHourPerDay(@PathVariable Long id,@RequestParam  LocalDate date) {
         return workService.getHoursPerDayForOneEmployee(date,id);
     }
 
+    // Méthode pour récupérer le nombre d'heures supplémentaires travaillées un jour donné (en fonction d'une date)
     @GetMapping("/overtimePerday/{id}")
     public long getOvertimePerDay (@PathVariable Long id,@RequestParam  LocalDate date) {
         return workService.getOvertimePerDay( date, id);
     }
 
+    // Méthode pour récupérer le nombre d'heures supplémentaires travaillées entre deux dates
     @GetMapping("/overtimePerWeek/{id}")
     public long getOvertimePerWeek (@PathVariable Long id, @RequestParam LocalDate date1, @RequestParam LocalDate date2) {
         return workService.getOvertimePerWeek(date1,date2, id);
     }
 
+    // Méthode pour ajouter un WorkTime (clickIN ou clickOUT)
     @PostMapping("/addWorkTime/{id}")
     public WorkTime addClocking (@PathVariable Long id, @RequestParam String clocking) {
         Employee employee = employeeService.getEmployeeById(id);
@@ -65,6 +70,12 @@ public long getHourPerBetweenTwoDates(@PathVariable Long id, @RequestParam  Loca
 
         WorkTime workTime = WorkTime.builder().employee(employee).date(currentDate).clocking(clockingEnum).hour(currentTime).build();
       return workService.saveWorkTime(workTime);
+    }
+
+    //Méthode pour récupérer la liste des workTime d'un employé entre deux date (les horaires)
+    @GetMapping("/allWorkTilePerEmployee/{id}")
+    public List<WorkTime> getAllWorkime (@PathVariable Long id, @RequestParam LocalDate date1, @RequestParam LocalDate date2) {
+        return workService.getallWorkTime(date1,date2, id);
     }
 
 

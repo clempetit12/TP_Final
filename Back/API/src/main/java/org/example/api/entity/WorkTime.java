@@ -1,5 +1,6 @@
 package org.example.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,7 @@ public class WorkTime {
     private Clocking clocking;
     private LocalDate date;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
@@ -36,5 +38,18 @@ public class WorkTime {
 
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public String
+
+    toString() {
+        return "WorkTime{" +
+                "id=" + id +
+                ", hour=" + hour +
+                ", clocking=" + clocking +
+                ", date=" + date +
+                ", employee=" + employee +
+                '}';
     }
 }

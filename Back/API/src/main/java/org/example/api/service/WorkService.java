@@ -97,4 +97,7 @@ public class WorkService {
         }
     }
 
+    public List<WorkTime> getallWorkTime(LocalDate date1, LocalDate date2, Long id) {
+        return workRepository.findByDateBetweenAndEmployeeId(date1,date2,id);
+    }
 }
