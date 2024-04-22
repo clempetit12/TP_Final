@@ -17,6 +17,8 @@ function App() {
     const password = passwordRef.current.value;
 
     dispatch(login({ email, password }));
+    emailRef.current.value = "";
+    passwordRef.current.value = "";
     navigate("/homePage");
   };
 
