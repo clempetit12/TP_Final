@@ -17,7 +17,7 @@ const Home = ({employeeId}) => {
           </View>
     
         
-          <Text style={styles.welcomeMessage}>Welcome Biance</Text>
+          <Text style={styles.welcomeMessage}>Welcome Bianca</Text>
     
   
           <Text style={styles.date}>{getCurrentDate()}</Text>

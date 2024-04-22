@@ -21,4 +21,11 @@ public interface WorkRepository extends JpaRepository<WorkTime, Long> {
     List<WorkTime> findByDateBetweenAndEmployeeId(LocalDate date1, LocalDate date2, Long id);
 
    Optional<WorkTime>  findTopByClockingAndDateAndEmployeeIdOrderByHourAsc(Clocking clocking, LocalDate date, Long employeeId);
-    Optional<WorkTime>  findTopByClockingAndDateAndEmployeeIdOrderByHourDesc(Clocking clocking, LocalDate date, Long employeeId);}
+    Optional<WorkTime>  findTopByClockingAndDateAndEmployeeIdOrderByHourDesc(Clocking clocking, LocalDate date, Long employeeId);
+
+    Optional<WorkTime> findTopByEmployeeIdAndDateOrderByHourDesc(Long employeeId, LocalDate date);
+
+
+
+
+}

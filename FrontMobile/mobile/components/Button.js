@@ -1,15 +1,15 @@
 import { addWorkTime } from "../screens/WorkTimeSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
-import { View, Button, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Button, ActivityIndicator } from 'react-native';
 
 
-const WorkTimeButton =({ clocking, employeeId}) => {
+const Button =({ clocking, employeeId}) => {
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.workTime.loading);
 
     const handlePress = () => {
-        dispatch(addWorkTime({employeeId,clocking});)
+        dispatch(addWorkTime({employeeId,clocking}))
     }
     const buttonColor = clocking === 'IN' ? 'green' : 'red';
 

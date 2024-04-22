@@ -8,10 +8,7 @@ import org.example.api.repository.WorkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.List;
 
 @Service
@@ -145,5 +142,27 @@ public class WorkService {
 
     public WorkTime getLastClockOut(Clocking clocking,LocalDate date, long employeeId) {
         return workRepository.findTopByClockingAndDateAndEmployeeIdOrderByHourDesc(clocking,date,employeeId).orElse(null);
+    }
+
+    public WorkTime getLastClocking(Long id, LocalDate date) {
+        return workRepository.findTopByEmployeeIdAndDateOrderByHourDesc(id,date).orElse(null);
+    }
+
+    public long getTotalHourWorkedForMonth(YearMonth yearMonth, long employeeId) {
+        LocalDate firstDayOfMonth = yearMonth.atDay(1);
+        LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
+      Duration duration = sumHoursBetweenDatesForEmployee(firstDayOfMonth,lastDayOfMonth,employeeId);
+        System.out.println("mont"+duration);
+
+        return duration.toHours();
+    }
+
+    public long getTotalHourWorkedForYear(Year year, long employeeId) {
+        LocalDate firstDayOfMonth = year.atDay(1);
+        LocalDate lastDayOfYear = year.atDay(1).plusYears(1).minusDays(1);
+        List<WorkTime> workTimes = workRepository.findByDateBetweenAndEmployeeId(firstDayOfMonth, lastDayOfYear,employeeId);
+        Duration duration = sumHoursBetweenDatesForEmployee(firstDayOfMonth,lastDayOfYear,employeeId);
+        System.out.println("year"+duration);
+        return duration.toHours();
     }
 }

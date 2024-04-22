@@ -2,10 +2,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
 import Home from './screens/Home'
-import Pokedex from './screens/Pokedex'
 import Details from './screens/Details'
 import store from './store/store'
-import MonPokedex from './screens/MonPokedex'
+
 
 export default function App() {
 
