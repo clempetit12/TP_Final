@@ -4,13 +4,17 @@ package org.example.api.controller;
 
 import org.example.api.dto.AuthenticationDto;
 import org.example.api.dto.BaseResponseDto;
+import org.example.api.dto.EmployeeDto;
 import org.example.api.entity.Employee;
+import org.example.api.mapper.MapperEmployeeDto;
 import org.example.api.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -28,38 +32,33 @@ public class EmployeeController {
         }
     }
 
-    @PostMapping("/loginAdmin")
-    public BaseResponseDto loginAdmin(@RequestBody AuthenticationDto authenticationDto) {
-        if(employeeService.checkUserNameExists(authenticationDto.getEmail())) {
-            if(employeeService.verifyAdmin(authenticationDto.getEmail(), authenticationDto.getPassword())) {
-                Map<String, Object> data = new HashMap<>();
-                data.put("token", employeeService.generateToken(authenticationDto.getEmail(), authenticationDto.getPassword()));
-                return new BaseResponseDto("success", data);
-            } else {
-                return new BaseResponseDto("wrong password");
-            }
+    @GetMapping("/admin/employee/{id}")
+    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id) {
+        Employee employee = employeeService.getEmployeeById(id);
+        EmployeeDto employeeDto = MapperEmployeeDto.convertToDto(employee);
+        return ResponseEntity.ok(employeeDto);
+    }
+
+    @GetMapping("/admin/employees")
+    public List<EmployeeDto> getAllEmployees() {
+        List<EmployeeDto> employeeDtos = employeeService.getAllEmployees().stream()
+                .map(MapperEmployeeDto::convertToDto)
+                .collect(Collectors.toList());
+
+        return employeeDtos;
+    }
+
+    @GetMapping("/admin/employee/lastname/{lastName}")
+    public ResponseEntity<?> getEmployeesByLastName(@PathVariable String lastName) {
+        Optional<Employee> employeeOptional = employeeService.getEmployeeByLastName(lastName);
+        if (employeeOptional.isPresent()) {
+            EmployeeDto employeeDto = MapperEmployeeDto.convertToDto(employeeOptional.get());
+            return ResponseEntity.ok(employeeDto);
         } else {
-            return new BaseResponseDto("user not exist");
+            return ResponseEntity.notFound().build();
         }
     }
 
-
-
-    @PostMapping("/loginEmployee")
-    public BaseResponseDto loginEmployee(@RequestBody AuthenticationDto authenticationDto){
-        if(employeeService.checkUserNameExists(authenticationDto.getEmail())){
-            if(employeeService.verifyUser(authenticationDto.getEmail(),authenticationDto.getPassword())){
-                Map<String, Object> data = new HashMap<>();
-                data.put("token", employeeService.generateToken(authenticationDto.getEmail(), authenticationDto.getPassword()));
-                return new BaseResponseDto("success", data);
-            }else {
-                return new BaseResponseDto("wrong password");
-            }
-        }else{
-            return new BaseResponseDto("user not exist");
-        }
-
-    }
 
     @DeleteMapping("/admin/deleteEmployee/{id}")
     public BaseResponseDto deleteEmployee(@PathVariable Long id) {
@@ -79,4 +78,17 @@ public class EmployeeController {
         }
     }
 
+    @PutMapping("/updatePassword")
+    public BaseResponseDto updatePassword(@RequestBody AuthenticationDto authenticationDto) {
+        if(employeeService.checkUserNameExists(authenticationDto.getEmail())) {
+                if(employeeService.updatePassword(authenticationDto.getEmail(), authenticationDto.getPassword())) {
+                    return new BaseResponseDto("success", "Password updated successfully");
+                } else {
+                    return new BaseResponseDto("failed", "Failed to update password");
+                }
+
+        } else {
+            return new BaseResponseDto("failed", "User not found");
+        }
+    }
 }

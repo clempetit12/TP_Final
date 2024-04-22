@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -51,7 +52,6 @@ public class EmployeeService implements UserDetailsService {
         return false;
     }
 
-
     public boolean verifyUser(String email, String password) {
         return employeeRepository.findByEmail(email)
                 .map(employee -> passwordEncoder.matches(password, employee.getPassword()))
@@ -66,6 +66,12 @@ public class EmployeeService implements UserDetailsService {
         }
         return PasswordTempory.ENABLE;
     }
+
+    public Employee getEmployeeById(Long id) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        return optionalEmployee.orElse(null);
+    }
+
 
 
     public boolean checkUserNameExists(String email){
@@ -84,6 +90,14 @@ public class EmployeeService implements UserDetailsService {
         employee.setPassword(passwordEncoder.encode(defaultPassword));
         employeeRepository.save(employee);
         return true;
+    }
+
+    public Optional<Employee> getEmployeeByLastName(String lastName) {
+        return employeeRepository.findByLastname(lastName);
+    }
+
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
     }
 
 //     Génère un mot de passe aléatoire de 10 caractères
@@ -123,6 +137,18 @@ public class EmployeeService implements UserDetailsService {
             }else{
                 return false;
             }
+    }
+
+    public boolean updatePassword(String email, String newPassword) {
+        Optional<Employee> optionalEmployee = employeeRepository.findByEmail(email);
+        if (optionalEmployee.isPresent()) {
+            Employee employee = optionalEmployee.get();
+            employee.setPasswordTemporary(PasswordTempory.DISABLE);
+            employee.setPassword(passwordEncoder.encode(newPassword));
+            employeeRepository.save(employee);
+            return true;
+        }
+        return false;
     }
 
     @Override
