@@ -3,19 +3,14 @@ import axios from "axios";
 
 const BASE_API_URL = "http://localhost:8090";
 
-
-export const postConnexion = createAsyncThunk(
-  "login/admin",
-  async (newLogin) => {
-    try {
-      const response = await axios.post(`${BASE_API_URL}/loginAdmin`, newLogin);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+export const login = createAsyncThunk("login/admin", async (newLogin) => {
+  try {
+    const response = await axios.post(`${BASE_API_URL}/loginAdmin`, newLogin);
+    return response.data;
+  } catch (error) {
+    throw error;
   }
-);
-
+});
 
 const LoginSlice = createSlice({
   name: "login",
@@ -24,12 +19,12 @@ const LoginSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-
-    builder.addCase(postConnexion.fulfilled, (state, action) => {
-        state.logins.push(action.payload);
-        console.log(action.payload)
+    builder.addCase(login.fulfilled, (state, action) => {
+      state.logins.push(action.payload);
+      if (action.payload.data && action.payload.data.token) {
+        localStorage.setItem("user", JSON.stringify(action.payload.data));
+      }
     });
-
   },
 });
 

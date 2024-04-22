@@ -3,6 +3,8 @@ const HomePage = () => {
        <>
         {/* <Header></Header>
         <Navbar></Navbar> */}
+
+        <p>HomePage</p>
        </>
     );
 }

@@ -1,9 +1,9 @@
-import styles from './App.module.css';
+import styles from "./App.module.css";
 import { useNavigate } from "react-router-dom";
 
-import { useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { postConnexion } from './Auth/LoginSlice'; 
+import { useRef } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "./Auth/LoginSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -12,14 +12,13 @@ function App() {
   const passwordRef = useRef();
 
   const onSubmit = async (event) => {
-    console.log("salut")
     event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
-      dispatch(postConnexion({ email, password }));
-   
-  }
+    dispatch(login({ email, password }));
+    navigate("/homePage");
+  };
 
   return (
     <main className={styles.main}>
@@ -28,13 +27,27 @@ function App() {
         <form className={styles.form} onSubmit={onSubmit}>
           <div className={styles.email}>
             <label htmlFor="email">Email</label>
-            <input className={styles.input} type="text" id="email" name="email" ref={emailRef} />
+            <input
+              className={styles.input}
+              type="text"
+              id="email"
+              name="email"
+              ref={emailRef}
+            />
           </div>
           <div className={styles.password}>
             <label htmlFor="password">Password</label>
-            <input className={styles.input} type="password" id="password" name="password" ref={passwordRef} />
+            <input
+              className={styles.input}
+              type="password"
+              id="password"
+              name="password"
+              ref={passwordRef}
+            />
           </div>
-          <button className={styles.button} type="submit">Login</button>
+          <button className={styles.button} type="submit">
+            Login
+          </button>
         </form>
       </section>
     </main>
@@ -42,4 +55,3 @@ function App() {
 }
 
 export default App;
-
