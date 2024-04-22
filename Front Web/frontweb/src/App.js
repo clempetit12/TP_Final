@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import styles from './App.module.css';
+import { useNavigate } from "react-router-dom";
+
+import { useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { postConnexion } from './Auth/LoginSlice'; 
 
 function App() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+
+  const onSubmit = async (event) => {
+    console.log("salut")
+    event.preventDefault();
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+
+      dispatch(postConnexion({ email, password }));
+   
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className={styles.main}>
+      <section className={styles.sectionOne}></section>
+      <section className={styles.sectionTwo}>
+        <form className={styles.form} onSubmit={onSubmit}>
+          <div className={styles.email}>
+            <label htmlFor="email">Email</label>
+            <input className={styles.input} type="text" id="email" name="email" ref={emailRef} />
+          </div>
+          <div className={styles.password}>
+            <label htmlFor="password">Password</label>
+            <input className={styles.input} type="password" id="password" name="password" ref={passwordRef} />
+          </div>
+          <button className={styles.button} type="submit">Login</button>
+        </form>
+      </section>
+    </main>
   );
 }
 
 export default App;
+
