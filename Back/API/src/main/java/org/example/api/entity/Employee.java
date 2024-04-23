@@ -41,7 +41,8 @@ public class Employee implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<WorkTime> workTimes;
 
 
@@ -90,3 +91,4 @@ public class Employee implements UserDetails {
         return true;
     }
 }
+
