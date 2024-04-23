@@ -6,6 +6,7 @@ import { accountService } from "./Service/accountService";
 import CreateEmployeeForm from "./Employee/CreateEmployeeForm";
 import Dashbord from "./Employee/Dashbord";
 import DetailsEmployee from "./Employee/DetailsEmployee";
+import UpdateEmployeeForm from "./Employee/UpdateEmployeeForm";
 
 
 const authCheck = () => {
@@ -40,6 +41,11 @@ const router = createBrowserRouter([
           {
             path: "/detailEmployee/:id",
             element:<DetailsEmployee/>,
+            loader : () => authCheck(),
+          },
+          {
+            path: "/updateEmployee/:id",
+            element:<UpdateEmployeeForm/>,
             loader : () => authCheck(),
           },
 
