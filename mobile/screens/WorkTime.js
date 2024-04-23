@@ -1,15 +1,42 @@
 
 import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native'
 import WorkTimeButton from '../components/WorkTimeButton';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getLastStatus, getWeekNumber } from './workTimeSlice';
 
  const WorkTime = () => {
 
-    const getCurrentDate = () => {
+  const API_URL = "http://10.0.2.2:8090/api/v1/workTime";
+const dispatch = useDispatch();
+const lastStatus = useSelector(state => state.workTime.lastStatus);
+const weekNumber = useSelector(state => state.workTime.weekNumber);
+const [currentDate, setCurrentDate] = "";
+const getCurrentDate = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); 
+  const day = String(date.getDate()+1).padStart(2, '0'); 
+  console.log("day"+day)
+  return `${year}-${month}-${day}`;
+};
 
-    
-        const date = new Date();
-        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-      };
+
+useEffect(() => {
+  setCurrentDate(getCurrentDate())
+  dispatch(getLastStatus());
+  dispatch(getWeekNumber(
+    currentDate
+  ));
+  console.log("weeknumber"+weekNumber)
+  console.log("status"+ lastStatus)
+}, [dispatch,lastStatus,weekNumber]);
+
+
+
+
+
+  
     
       return (
         <View style={styles.container}>
@@ -24,13 +51,23 @@ import WorkTimeButton from '../components/WorkTimeButton';
     
   
           <Text style={styles.date}>{getCurrentDate()}</Text>
-    
+
+          <Text style={styles.weekNumber}>Week Number : {weekNumber}</Text>
     
           <View style={styles.buttonsContainer}>
-        <WorkTimeButton clocking="IN" />
-        <View style={styles.separator} />
-        <WorkTimeButton clocking="OUT" />
+      
+          <TouchableOpacity onPress={() => handleButtonClick("IN")}>
+            <WorkTimeButton clocking="IN" />
+          </TouchableOpacity>
+     
+   
+          <TouchableOpacity onPress={() => handleButtonClick("OUT")}>
+            <WorkTimeButton clocking="OUT" />
+          </TouchableOpacity>
+        
       </View>
+
+      <View style={styles.bottomBorder}></View>
       
           <Text style={styles.hoursWorked}>Total Hours Worked</Text>
           <Text style={styles.hours}> XX hours</Text>
@@ -65,6 +102,11 @@ import WorkTimeButton from '../components/WorkTimeButton';
         marginBottom: 10,
       },
       date: {
+        fontSize: 25,
+        textAlign: 'center',
+        marginBottom: 20,
+      },
+      weekNumber: {
         fontSize: 16,
         textAlign: 'center',
         marginBottom: 20,
@@ -83,6 +125,11 @@ import WorkTimeButton from '../components/WorkTimeButton';
         fontSize: 20,
         textAlign: 'center',
 
+      },
+      bottomBorder: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'black', 
+        marginBottom: 10, 
       }
     });
     

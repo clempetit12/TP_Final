@@ -37,6 +37,8 @@
     <string name="bottomsheet_action_expand_halfway">ពង្រីក​ពាក់កណ្ដាល</string>
     <string name="bottomsheet_drag_handle_clicked">បានប៉ះដង​អូស​ពីរដង</string>
     <string name="bottomsheet_drag_handle_content_description">ដង​អូស</string>
+    <string gender="unknown" name="catalyst_dev_menu_header">ប្រតិកម្ម​ម៉ឺនុយ​​អភិវឌ្ឍដើម (%1$s)</string>
+    <string gender="unknown" name="catalyst_dev_menu_sub_header">ដំណើរការ %1$s</string>
     <string name="character_counter_content_description">តួ​អក្សរ​បាន​បញ្ចូល​ %1$d នៃ %2$d</string>
     <string name="character_counter_overflowed_content_description">ដែនកំណត់តួអក្សរបានលើស %1$d នៃ %2$d</string>
     <string name="clear_text_end_icon_content_description">សម្អាតអក្សរ</string>

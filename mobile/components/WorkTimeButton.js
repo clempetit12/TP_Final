@@ -6,8 +6,11 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native'
 
-const WorkTimeButton = ({ clocking }) => {
+const WorkTimeButton = ({ clocking}) => {
     const dispatch = useDispatch();
+
+
+    const API_URL = "http://10.0.2.2:8090/api/v1/workTime";
 
     const handlePress = () => {
         dispatch(addWorkTime({ clocking }));
