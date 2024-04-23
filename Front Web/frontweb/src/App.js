@@ -1,25 +1,25 @@
 import styles from "./App.module.css";
-import { useNavigate } from "react-router-dom";
-
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "./Auth/LoginSlice";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
+  const navigate = useNavigate();
 
   const onSubmit = async (event) => {
     event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
-    dispatch(login({ email, password }));
+    await dispatch(login({ email, password }));
+    navigate("/dashboard")
     emailRef.current.value = "";
     passwordRef.current.value = "";
-    navigate("/homePage");
+    
   };
 
   return (

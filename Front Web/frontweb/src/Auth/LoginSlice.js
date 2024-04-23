@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { accountService } from "../Service/accountService";
 
+
 const BASE_API_URL = "http://localhost:8090";
 
 export const login = createAsyncThunk("login/admin", async (newLogin) => {
@@ -24,6 +25,7 @@ const LoginSlice = createSlice({
       state.logins.push(action.payload);
       if (action.payload.data && action.payload.data.token) {
         accountService.saveToken(action.payload.data.token);
+  
       }
     });
   },

@@ -1,0 +1,54 @@
+.header{
+    background-color: #1F1BD5;
+    height: 5vh;
+}
+
+.divLogout{
+    height: 100%;
+    display :flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.logout {
+    border: none;
+    outline: none;
+    background-color: #1F1BD5;
+    font-size: 1em;
+    color: white;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: border-color 0.3s ease; 
+}
+
+.logout:hover {
+    border-color: white; 
+}
+
+
+
+.main{
+    display: grid;
+    grid-template-columns: 20% 80%; 
+    height: 100vh;
+
+}
+
+.sectionOne{
+    background-color: #1F1BD5;
+    display: flex;
+    justify-content: center;
+    color: white;
+}
+
+.nav{
+    margin-top: 20px;
+}
+
+.a{
+    text-decoration: none;
+    color: white;
+}
+
+
+
