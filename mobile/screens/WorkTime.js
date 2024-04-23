@@ -1,7 +1,12 @@
 
-const WorkTime = ({employeeId}) => {
+import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native'
+import WorkTimeButton from '../components/WorkTimeButton';
+
+ const WorkTime = () => {
 
     const getCurrentDate = () => {
+
+    
         const date = new Date();
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
       };
@@ -11,25 +16,24 @@ const WorkTime = ({employeeId}) => {
 
           <View style={styles.header}>
     
-            <Image source={require('./path/to/logo.png')} style={styles.logo} />
 
-            <Image source={{ uri: employeeImage }} style={styles.employeeImage} />
           </View>
     
         
-          <Text style={styles.welcomeMessage}>Welcome Biance</Text>
+          <Text style={styles.welcomeMessage}>Welcome Bianca</Text>
     
   
           <Text style={styles.date}>{getCurrentDate()}</Text>
     
     
           <View style={styles.buttonsContainer}>
-            <WorkTimeButton clockingType="IN" employeeId={employeeId} />
-            <WorkTimeButton clockingType="OUT" employeeId={employeeId} />
-          </View>
-    
+        <WorkTimeButton clocking="IN" />
+        <View style={styles.separator} />
+        <WorkTimeButton clocking="OUT" />
+      </View>
       
-          <Text style={styles.hoursWorked}>Total Hours Worked: XX hours</Text>
+          <Text style={styles.hoursWorked}>Total Hours Worked</Text>
+          <Text style={styles.hours}> XX hours</Text>
         </View>
       );
     };
@@ -66,12 +70,20 @@ const WorkTime = ({employeeId}) => {
         marginBottom: 20,
       },
       buttonsContainer: {
-        marginBottom: 20,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        marginBottom: 40,
       },
       hoursWorked: {
-        fontSize: 18,
+        fontSize: 30,
         textAlign: 'center',
+        marginBottom: 20
       },
+      hours : {
+        fontSize: 20,
+        textAlign: 'center',
+
+      }
     });
     
     export default WorkTime;

@@ -1,5 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import PokemonSlice from "../screens/PokemonSlice";
+import workTimeSlice from "../screens/workTimeSlice";
+
+
 
 
 

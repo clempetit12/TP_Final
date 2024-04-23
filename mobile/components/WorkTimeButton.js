@@ -1,23 +1,42 @@
-import { addWorkTime } from "../screens/workTimeSlice";
-import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
-import { View, Button, ActivityIndicator } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { addWorkTime } from '../screens/workTimeSlice';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 
-export default  WorkTimeButton =({ clocking, employeeId}) => {
+import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native'
+
+const WorkTimeButton = ({ clocking }) => {
     const dispatch = useDispatch();
-    const loading = useSelector((state) => state.workTime.loading);
 
     const handlePress = () => {
-        dispatch(addWorkTime({employeeId,clocking}))
-    }
-    const buttonColor = clocking === 'IN' ? 'green' : 'red';
+        dispatch(addWorkTime({ clocking }));
+        
+    };
 
+ 
+    const buttonColor = clocking === 'IN' ? 'red' : 'green';
     return (
-        <View style={styles.container}>
-        <Button title={`Clock ${clocking}`} onPress={handlePress}color={buttonColor}/>
-        {loading && <ActivityIndicator size="small" color="#0000ff" />}
-      </View>
-
+      <TouchableOpacity style={[styles.button, { backgroundColor: buttonColor }]} onPress={handlePress}>
+        <Text style={styles.buttonText}>{`Clock ${clocking}`} </Text>
+      </TouchableOpacity>
     );
-}
+  };
+  
+  const styles = StyleSheet.create({
+    button: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 10,
+      height: 100,
+      borderRadius: 10,
+      marginBottom : 20
+    },
+    buttonText: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: 'white',
+    },
+  });
+  
+  export default WorkTimeButton;
