@@ -1,32 +1,39 @@
 import { useRef } from "react";
 import { Form, Button } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { createEmployee } from "./EmployeeSlice";
 
 const CreateEmployeeForm = () => {
-  const lastNameRef = useRef(null);
-  const firstNameRef = useRef(null);
+
+  const dispatch = useDispatch();
+
+  const lastnameRef = useRef(null);
+  const firstnameRef = useRef(null);
   const emailRef = useRef(null);
   const ageRef = useRef(null);
   const jobRef = useRef(null);
   const roleRef = useRef(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = {
-      lastName: lastNameRef.current.value,
-      firstName: firstNameRef.current.value,
+      lastname: lastnameRef.current.value,
+      firstname: firstnameRef.current.value,
       email: emailRef.current.value,
       age: ageRef.current.value,
-      job: jobRef.current.value,
+      jobTitle: jobRef.current.value,
       role: roleRef.current.value,
     };
 
-    // Vous pouvez traiter les données ici, par exemple, les envoyer à votre API
+
     console.log(formData);
 
+     dispatch(createEmployee(formData))
+
     // Réinitialiser les valeurs du formulaire si nécessaire
-    lastNameRef.current.value = "";
-    firstNameRef.current.value = "";
+    lastnameRef.current.value = "";
+    firstnameRef.current.value = "";
     emailRef.current.value = "";
     ageRef.current.value = "";
     jobRef.current.value = "";
@@ -38,14 +45,14 @@ const CreateEmployeeForm = () => {
       <div className="w-50">
         <h2 className="mb-4">Create Employee</h2>
         <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="lastName">
+          <Form.Group controlId="lastname">
             <Form.Label>Last Name</Form.Label>
-            <Form.Control type="text" placeholder="Enter last name" ref={lastNameRef} />
+            <Form.Control type="text" placeholder="Enter lastname" ref={lastnameRef} />
           </Form.Group>
 
-          <Form.Group controlId="firstName">
+          <Form.Group controlId="firstname">
             <Form.Label>First Name</Form.Label>
-            <Form.Control type="text" placeholder="Enter first name" ref={firstNameRef} />
+            <Form.Control type="text" placeholder="Enter firstname" ref={firstnameRef} />
           </Form.Group>
 
           <Form.Group controlId="email">
@@ -66,8 +73,8 @@ const CreateEmployeeForm = () => {
           <Form.Group controlId="role">
             <Form.Label>Role</Form.Label>
             <Form.Control as="select" ref={roleRef}>
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
+              <option value="ROLE_USER">User</option>
+              <option value="ROLE_ADMIN">Admin</option>
             </Form.Control>
           </Form.Group>
 

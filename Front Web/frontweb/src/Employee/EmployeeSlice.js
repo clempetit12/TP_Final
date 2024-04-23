@@ -4,7 +4,7 @@ import { accountService } from "../Service/accountService";
 
 const BASE_API_URL = "http://localhost:8090";
 
-export const getAllEmpoyees = createAsyncThunk(
+export const getAllEmployees = createAsyncThunk(
     "employee/getAllEmployees",
     async () => {
         try {
@@ -44,7 +44,7 @@ export const createEmployee = createAsyncThunk(
     "employee/createEmployee",
     async (newEmployee) => {
         try {
-            const response = await axios.post(`${BASE_API_URL}/admin/createEmployee`, newEmployee, { headers: accountService.getToken()});
+            const response = await axios.post(`${BASE_API_URL}/admin/createEmployee`, newEmployee,{ headers: accountService.getToken()});
             return response.data;
           } catch (error) {
             throw error;
@@ -86,7 +86,7 @@ const employeeSlice = createSlice({
     },
     reducers:{},
     extraReducers:(builder)=> {
-        builder.addCase(getAllEmpoyees.fulfilled, (state , action)=>{
+        builder.addCase(getAllEmployees.fulfilled, (state , action)=>{
             state.employees = action.payload;
         });
         builder.addCase(getEmployeeById.fulfilled, (state , action)=>{
@@ -97,6 +97,7 @@ const employeeSlice = createSlice({
         });
         builder.addCase(createEmployee.fulfilled, (state , action)=>{
             state.employees.push(action.payload);
+            console.log(accountService.getToken());
         });
         builder.addCase(updateEmployee.fulfilled, (state , action)=>{
             const index = state.employees.findIndex(

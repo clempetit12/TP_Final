@@ -5,6 +5,7 @@ import ErrorPage from "./Component/ErrorPage";
 import { accountService } from "./Service/accountService";
 import CreateEmployeeForm from "./Employee/CreateEmployeeForm";
 import Dashbord from "./Employee/Dashbord";
+import DetailsEmployee from "./Employee/DetailsEmployee";
 
 
 const authCheck = () => {
@@ -36,6 +37,12 @@ const router = createBrowserRouter([
               element:<CreateEmployeeForm/>,
               loader : () => authCheck(),
           },
+          {
+            path: "/detailEmployee/:id",
+            element:<DetailsEmployee/>,
+            loader : () => authCheck(),
+          },
+
           ],
     }
 
