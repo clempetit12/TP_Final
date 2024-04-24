@@ -36,6 +36,7 @@ com.mobile.app-debug-34 C:\Users\Administrateur\Desktop\TPFInalGoodRepo\TP_Final
 com.mobile.app-main-35 C:\Users\Administrateur\Desktop\TPFInalGoodRepo\TP_Final\mobile\android\app\src\main\res
 com.mobile.app-packaged_res-36 C:\Users\Administrateur\Desktop\TPFInalGoodRepo\TP_Final\mobile\node_modules\@react-native-community\datetimepicker\android\build\intermediates\packaged_res\debug
 com.mobile.app-packaged_res-37 C:\Users\Administrateur\Desktop\TPFInalGoodRepo\TP_Final\mobile\node_modules\@react-native-community\masked-view\android\build\intermediates\packaged_res\debug
-com.mobile.app-packaged_res-38 C:\Users\Administrateur\Desktop\TPFInalGoodRepo\TP_Final\mobile\node_modules\react-native-gesture-handler\android\build\intermediates\packaged_res\debug
-com.mobile.app-packaged_res-39 C:\Users\Administrateur\Desktop\TPFInalGoodRepo\TP_Final\mobile\node_modules\react-native-safe-area-context\android\build\intermediates\packaged_res\debug
-com.mobile.app-packaged_res-40 C:\Users\Administrateur\Desktop\TPFInalGoodRepo\TP_Final\mobile\node_modules\react-native-screens\android\build\intermediates\packaged_res\debug
+com.mobile.app-packaged_res-38 C:\Users\Administrateur\Desktop\TPFInalGoodRepo\TP_Final\mobile\node_modules\@react-native-picker\picker\android\build\intermediates\packaged_res\debug
+com.mobile.app-packaged_res-39 C:\Users\Administrateur\Desktop\TPFInalGoodRepo\TP_Final\mobile\node_modules\react-native-gesture-handler\android\build\intermediates\packaged_res\debug
+com.mobile.app-packaged_res-40 C:\Users\Administrateur\Desktop\TPFInalGoodRepo\TP_Final\mobile\node_modules\react-native-safe-area-context\android\build\intermediates\packaged_res\debug
+com.mobile.app-packaged_res-41 C:\Users\Administrateur\Desktop\TPFInalGoodRepo\TP_Final\mobile\node_modules\react-native-screens\android\build\intermediates\packaged_res\debug

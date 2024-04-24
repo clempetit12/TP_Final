@@ -1,25 +1,22 @@
-import { StyleSheet } from 'react-native';
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Provider } from 'react-redux';
 import store from './store/store';
 import WorkTime from './screens/WorkTime';
-import { Provider } from 'react-redux';
 import Details from './screens/Details';
 
-const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
     <Provider store={store}>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Details'>
-        <Stack.Screen name='WorkTime' component={WorkTime} options={{ title: 'WorkTime' }} />
-        <Stack.Screen name='Details' component={Details} options={{ title: 'Détails' }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="WorkTime" component={WorkTime} options={{ title: 'WorkTime' }} />
+          <Tab.Screen name="Details" component={Details} options={{ title: 'Détails' }} />
+        </Tab.Navigator>
+      </NavigationContainer>
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({});

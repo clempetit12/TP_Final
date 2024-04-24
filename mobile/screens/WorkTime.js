@@ -11,23 +11,27 @@ import { getLastStatus, getWeekNumber } from './workTimeSlice';
 const dispatch = useDispatch();
 const lastStatus = useSelector(state => state.workTime.lastStatus);
 const weekNumber = useSelector(state => state.workTime.weekNumber);
-const [currentDate, setCurrentDate] = "";
+
+
 const getCurrentDate = () => {
   const date = new Date();
+  console.log("date" + date)
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0'); 
-  const day = String(date.getDate()+1).padStart(2, '0'); 
+  const day = String(date.getDate()).padStart(2, '0'); 
   console.log("day"+day)
-  return `${year}-${month}-${day}`;
+  const currentDate = `${year}-${month}-${day}`
+  return currentDate;
 };
+const[currentDateValue, setCurrenDateValue] = useState(getCurrentDate());
+
 
 
 useEffect(() => {
-  setCurrentDate(getCurrentDate())
+  console.log("currentdate"+currentDateValue)
   dispatch(getLastStatus());
-  dispatch(getWeekNumber(
-    currentDate
-  ));
+  dispatch(getWeekNumber(currentDateValue));
+
   console.log("weeknumber"+weekNumber)
   console.log("status"+ lastStatus)
 }, [dispatch,lastStatus,weekNumber]);

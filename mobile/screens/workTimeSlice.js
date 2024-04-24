@@ -25,6 +25,16 @@ export const addWorkTime = createAsyncThunk(
         }
     }
 );
+const getCurrentDate = () => {
+  const date = new Date();
+  console.log("date" + date)
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); 
+  const day = String(date.getDate()).padStart(2, '0'); 
+  console.log("day"+day)
+  const currentDate = `${year}-${month}-${day}`
+  return currentDate;
+};
 
 
 export const getLastStatus = createAsyncThunk(
@@ -52,9 +62,9 @@ export const getLastStatus = createAsyncThunk(
 
 export const getWeekNumber = createAsyncThunk(
     'workTime/WeekNumber',
-    async ({date}) => {
+    async () => {
         try {
-            const currentDate = date;
+            const currentDate = getCurrentDate();
             console.log("currentdate");
             console.log("currentdate"+currentDate)
             const response = await fetch(`${API_URL}/getWeekNumber?date=${currentDate}`, {
@@ -74,24 +84,27 @@ export const getWeekNumber = createAsyncThunk(
 );
 
 export const getWeeklySummary = createAsyncThunk(
-    'workTime/weeklySummary',
-    async ({weekNumber}) => {
-        try {
-            const employeeId = 1;
-            const response = await fetch(`${API_URL}/weeklySummary?weekNumber=${weekNumber}&employeeId=${employeeId}`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-            const data = await response.json(); 
-            console.log("weeknumber"+data)
-           return data;
-          } catch (error) {
-            console.error('Erreur lors de la récupération du dernier statut :', error);
-          }
+  'workTime/weeklySummary',
+  async ({selectedWeek}) => {
+      try {
+        console.log("weeklySummary")
+          const employeeId = 1;
+          console.log("selectedw weekly" + selectedWeek)
+          const response = await fetch(`${API_URL}/weeklySummary?weekNumber=${selectedWeek}&employeeId=${employeeId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const data = await response.json(); 
+          console.log("weekly summary"+data)
+          console.table("weekdate"+data);
+         return data;
+        } catch (error) {
+          console.error('Erreur lors de la récupération du dernier statut :', error);
         }
-    
+      }
+  
 );
 
 
