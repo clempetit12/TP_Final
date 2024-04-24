@@ -13,7 +13,12 @@ let isLogged = () => {
 
 let getToken = () => {
   let token = localStorage.getItem("token");
-  return token;
+  const headers = {};
+
+  if (token) {
+      headers['Authorization'] = 'Bearer ' + token;
+  }
+  return headers;
 }
 
 export const accountService = {

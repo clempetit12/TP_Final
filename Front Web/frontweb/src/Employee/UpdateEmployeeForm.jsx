@@ -1,11 +1,14 @@
-import { useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useRef } from "react";
 import { Form, Button } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { createEmployee } from "./EmployeeSlice";
+import { updateEmployee } from "./EmployeeSlice";
 
-const CreateEmployeeForm = () => {
-
+const UpdateEmployeeForm = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const employee = useSelector((state) => state.employees.selectedEmployee);
 
   const lastnameRef = useRef(null);
   const firstnameRef = useRef(null);
@@ -14,10 +17,23 @@ const CreateEmployeeForm = () => {
   const jobRef = useRef(null);
   const roleRef = useRef(null);
 
+  useEffect(() => {
+    // Pré-remplir les champs du formulaire avec les données actuelles de l'employé
+    if (employee) {
+      lastnameRef.current.value = employee.lastname;
+      firstnameRef.current.value = employee.firstname;
+      emailRef.current.value = employee.email;
+      ageRef.current.value = employee.age;
+      jobRef.current.value = employee.jobTitle;
+      roleRef.current.value = employee.role;
+    }
+  }, [employee]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = {
+      id: id,
       lastname: lastnameRef.current.value,
       firstname: firstnameRef.current.value,
       email: emailRef.current.value,
@@ -26,24 +42,17 @@ const CreateEmployeeForm = () => {
       role: roleRef.current.value,
     };
 
+    // Dispatch de l'action de mise à jour de l'employé
+    dispatch(updateEmployee(formData));
 
-    console.log(formData);
-
-     dispatch(createEmployee(formData))
-
-    // Réinitialiser les valeurs du formulaire si nécessaire
-    lastnameRef.current.value = "";
-    firstnameRef.current.value = "";
-    emailRef.current.value = "";
-    ageRef.current.value = "";
-    jobRef.current.value = "";
-    roleRef.current.value = "user";
+    // Redirection vers la page des détails de l'employé après la mise à jour
+    navigate(`/detailEmployee/${id}`);
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
       <div className="w-50">
-        <h2 className="mb-4">Create Employee</h2>
+        <h2 className="mb-4">Update Employee</h2>
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="lastname">
             <Form.Label>Last Name</Form.Label>
@@ -79,7 +88,7 @@ const CreateEmployeeForm = () => {
           </Form.Group>
 
           <Button variant="primary" type="submit">
-            Submit
+            Update
           </Button>
         </Form>
       </div>
@@ -87,5 +96,4 @@ const CreateEmployeeForm = () => {
   );
 };
 
-export default CreateEmployeeForm;
-
+export default UpdateEmployeeForm;

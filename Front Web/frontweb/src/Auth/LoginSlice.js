@@ -25,6 +25,7 @@ const LoginSlice = createSlice({
       state.logins.push(action.payload);
       if (action.payload.data && action.payload.data.token) {
         accountService.saveToken(action.payload.data.token);
+      
   
       }
     });
