@@ -23,10 +23,12 @@ public class LoginController {
     public BaseResponseDto loginAdmin(@RequestBody AuthenticationDto authenticationDto) {
         if (employeeService.checkUserNameExists(authenticationDto.getEmail())) {
             if (employeeService.verifyAdmin(authenticationDto.getEmail(), authenticationDto.getPassword())) {
+                Long id = employeeService.getIdByEmail(authenticationDto.getEmail());
                 PasswordTempory passwordTemporary = employeeService.checkPasswordTempory(authenticationDto.getEmail());
                 Map<String, Object> data = new HashMap<>();
                 data.put("token", employeeService.generateToken(authenticationDto.getEmail(), authenticationDto.getPassword()));
                 data.put("passwordTemporary", passwordTemporary);
+                data.put("id", id );
                 return new BaseResponseDto("success", data);
             } else {
                 return new BaseResponseDto("wrong password");
@@ -42,8 +44,10 @@ public class LoginController {
             if(employeeService.verifyUser(authenticationDto.getEmail(),authenticationDto.getPassword())){
                 PasswordTempory passwordTemporary = employeeService.checkPasswordTempory(authenticationDto.getEmail());
                 Map<String, Object> data = new HashMap<>();
+                Long id = employeeService.getIdByEmail(authenticationDto.getEmail());
                 data.put("token", employeeService.generateToken(authenticationDto.getEmail(), authenticationDto.getPassword()));
                 data.put("passwordTemporary", passwordTemporary);
+                data.put("id", id );
                 return new BaseResponseDto("success", data);
             } else {
                 return new BaseResponseDto("wrong password");

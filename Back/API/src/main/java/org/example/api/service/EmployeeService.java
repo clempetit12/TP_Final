@@ -72,6 +72,11 @@ public class EmployeeService implements UserDetailsService {
         return optionalEmployee.orElse(null);
     }
 
+    public Long getIdByEmail(String email) {
+        Optional<Employee> optionalEmployee = employeeRepository.findByEmail(email);
+        return optionalEmployee.map(Employee::getId).orElse(null);
+    }
+
 
 
     public boolean checkUserNameExists(String email){

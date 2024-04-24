@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert, Text } from 'react-native';
-import { accountService } from './accountService';
-import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
-import { login } from './LoginSlice';
+import React, {useState} from 'react';
+import {View, TextInput, Button, StyleSheet, Alert, Text} from 'react-native';
+import {accountService} from './accountService';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {login} from './LoginSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getUserDetails } from '../service/UserDetails';
-
+import {getUserDetails} from '../service/UserDetails';
 
 const LoginPage = () => {
-  const BASE_API_URL = "http://10.0.2.2:8090";
-  const dispatch = useDispatch()
+  const BASE_API_URL = 'http://10.0.2.2:8090';
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,7 +23,7 @@ const LoginPage = () => {
   //     if(accountService.isLogged()){
   //       navigation.navigate('WorkTime');
   //     }
-      
+
   //   } catch (error) {
   //     console.error('Erreur lors de la connexion :', error);
   //     Alert.alert('Erreur lors de la connexion', error.message || 'Une erreur est survenue lors de la connexion');
@@ -38,7 +37,7 @@ const LoginPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({email, password}),
       });
 
       if (!response.ok) {
@@ -48,20 +47,21 @@ const LoginPage = () => {
 
       const data = await response.json();
       console.log(data);
-      
 
       if (data && data.data && data.data.token) {
-        // Enregistrement du token dans le local storage
+        // Enregistrement du token et de l'id dans le local storage
         await accountService.saveToken(data.data.token);
-        // await AsyncStorage.setItem('token', data.data.token);
-         console.log(getUserDetails());
-        navigation.navigate('WorkTime')
+        await accountService.saveId(data.data.id);
+        navigation.navigate('WorkTime');
       } else {
-        throw new Error('Aucun token trouvé dans la réponse');
+        throw new Error('Erreur lors de la connexion');
       }
     } catch (error) {
       console.error('Erreur lors de la connexion :', error);
-      Alert.alert('Erreur lors de la connexion', error.message || 'Une erreur est survenue lors de la connexion');
+      Alert.alert(
+        'Erreur lors de la connexion',
+        error.message || 'Une erreur est survenue lors de la connexion',
+      );
     }
   };
 
@@ -83,9 +83,7 @@ const LoginPage = () => {
         secureTextEntry
       />
       <Button title="Login" onPress={handleLogin} />
-      {apiResponse && (
-        <Text>API Response: {JSON.stringify(apiResponse)}</Text>
-      )}
+      {apiResponse && <Text>API Response: {JSON.stringify(apiResponse)}</Text>}
     </View>
   );
 };
@@ -108,4 +106,3 @@ const styles = StyleSheet.create({
 });
 
 export default LoginPage;
-

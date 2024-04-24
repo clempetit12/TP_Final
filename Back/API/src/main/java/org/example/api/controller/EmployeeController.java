@@ -39,6 +39,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeDto);
     }
 
+
     @GetMapping("/admin/employees")
     public List<EmployeeDto> getAllEmployees() {
         List<EmployeeDto> employeeDtos = employeeService.getAllEmployees().stream()
@@ -58,6 +59,7 @@ public class EmployeeController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
 
     @DeleteMapping("/admin/deleteEmployee/{id}")
