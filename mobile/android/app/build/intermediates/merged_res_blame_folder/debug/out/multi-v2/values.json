@@ -4,25 +4,6 @@
             "outputFile": "com.mobile.app-mergeDebugResources-31:/values/values.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Administrateur\\Desktop\\TPFInalGoodRepo\\TP_Final\\mobile\\node_modules\\@react-native-community\\datetimepicker\\android\\build\\intermediates\\packaged_res\\debug\\values\\values.xml",
-                    "from": {
-                        "startLines": "2,3,6,9,10,13",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "100,181,389,572,653,861",
-                        "endLines": "2,5,8,9,12,15",
-                        "endColumns": "80,12,12,80,12,12",
-                        "endOffsets": "176,384,567,648,856,1039"
-                    },
-                    "to": {
-                        "startLines": "5922,5923,5926,5929,5930,5933",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "418653,418734,418942,419125,419206,419414",
-                        "endLines": "5922,5925,5928,5929,5932,5935",
-                        "endColumns": "80,12,12,80,12,12",
-                        "endOffsets": "418729,418937,419120,419201,419409,419592"
-                    }
-                },
-                {
                     "source": "C:\\Users\\Administrateur\\.gradle\\caches\\transforms-4\\aa7aaac95bba452a5b7a2141ce022192\\transformed\\lifecycle-runtime-2.5.1\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -54,6 +35,23 @@
                         "startOffsets": "118629",
                         "endColumns": "53",
                         "endOffsets": "118678"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Administrateur\\Desktop\\TP_Final\\mobile\\android\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "1",
+                        "startColumns": "4",
+                        "startOffsets": "17",
+                        "endColumns": "43",
+                        "endOffsets": "56"
+                    },
+                    "to": {
+                        "startLines": "1883",
+                        "startColumns": "4",
+                        "startOffsets": "125779",
+                        "endColumns": "43",
+                        "endOffsets": "125818"
                     }
                 },
                 {
@@ -165,20 +163,22 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Administrateur\\Desktop\\TPFInalGoodRepo\\TP_Final\\mobile\\android\\app\\src\\main\\res\\values\\strings.xml",
+                    "source": "C:\\Users\\Administrateur\\Desktop\\TP_Final\\mobile\\android\\app\\src\\main\\res\\values\\styles.xml",
                     "from": {
-                        "startLines": "1",
+                        "startLines": "3",
                         "startColumns": "4",
-                        "startOffsets": "17",
-                        "endColumns": "43",
-                        "endOffsets": "56"
+                        "startOffsets": "57",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "273"
                     },
                     "to": {
-                        "startLines": "1883",
+                        "startLines": "2104",
                         "startColumns": "4",
-                        "startOffsets": "125779",
-                        "endColumns": "43",
-                        "endOffsets": "125818"
+                        "startOffsets": "154190",
+                        "endLines": "2107",
+                        "endColumns": "12",
+                        "endOffsets": "154368"
                     }
                 },
                 {
@@ -236,6 +236,23 @@
                         "endLines": "94,9153,10518,10602",
                         "endColumns": "60,12,24,24",
                         "endOffsets": "5072,637278,696791,701307"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Administrateur\\Desktop\\TP_Final\\mobile\\android\\app\\build\\generated\\res\\resValues\\debug\\values\\gradleResValues.xml",
+                    "from": {
+                        "startLines": "6,8",
+                        "startColumns": "4,4",
+                        "startOffsets": "159,265",
+                        "endColumns": "63,68",
+                        "endOffsets": "218,329"
+                    },
+                    "to": {
+                        "startLines": "1846,1847",
+                        "startColumns": "4,4",
+                        "startOffsets": "123133,123197",
+                        "endColumns": "63,68",
+                        "endOffsets": "123192,123261"
                     }
                 },
                 {
@@ -351,20 +368,22 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Administrateur\\Desktop\\TPFInalGoodRepo\\TP_Final\\mobile\\android\\app\\build\\generated\\res\\resValues\\debug\\values\\gradleResValues.xml",
+                    "source": "C:\\Users\\Administrateur\\Desktop\\TP_Final\\mobile\\node_modules\\@react-native-community\\datetimepicker\\android\\build\\intermediates\\packaged_res\\debug\\values\\values.xml",
                     "from": {
-                        "startLines": "6,8",
-                        "startColumns": "4,4",
-                        "startOffsets": "159,265",
-                        "endColumns": "63,68",
-                        "endOffsets": "218,329"
+                        "startLines": "2,3,6,9,10,13",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "100,181,389,572,653,861",
+                        "endLines": "2,5,8,9,12,15",
+                        "endColumns": "80,12,12,80,12,12",
+                        "endOffsets": "176,384,567,648,856,1039"
                     },
                     "to": {
-                        "startLines": "1846,1847",
-                        "startColumns": "4,4",
-                        "startOffsets": "123133,123197",
-                        "endColumns": "63,68",
-                        "endOffsets": "123192,123261"
+                        "startLines": "5922,5923,5926,5929,5930,5933",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "418653,418734,418942,419125,419206,419414",
+                        "endLines": "5922,5925,5928,5929,5932,5935",
+                        "endColumns": "80,12,12,80,12,12",
+                        "endOffsets": "418729,418937,419120,419201,419409,419592"
                     }
                 },
                 {
@@ -422,25 +441,6 @@
                         "endLines": "12081",
                         "endColumns": "24",
                         "endOffsets": "759224"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Administrateur\\Desktop\\TPFInalGoodRepo\\TP_Final\\mobile\\android\\app\\src\\main\\res\\values\\styles.xml",
-                    "from": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "57",
-                        "endLines": "6",
-                        "endColumns": "12",
-                        "endOffsets": "273"
-                    },
-                    "to": {
-                        "startLines": "2104",
-                        "startColumns": "4",
-                        "startOffsets": "154190",
-                        "endLines": "2107",
-                        "endColumns": "12",
-                        "endOffsets": "154368"
                     }
                 },
                 {

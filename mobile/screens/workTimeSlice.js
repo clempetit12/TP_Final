@@ -123,10 +123,6 @@ export const getHoursPerWeek = createAsyncThunk(
 
 
 
-
-
-
-
 const workTimeSlice = createSlice({
     name: 'workTime',
     initialState: {

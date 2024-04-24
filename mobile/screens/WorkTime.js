@@ -11,7 +11,7 @@ import { getLastStatus, getWeekNumber } from './workTimeSlice';
 const dispatch = useDispatch();
 const lastStatus = useSelector(state => state.workTime.lastStatus);
 const weekNumber = useSelector(state => state.workTime.weekNumber);
-const [currentDate, setCurrentDate] = "";
+const [currentDate, setCurrentDate] = useState("");
 const getCurrentDate = () => {
   const date = new Date();
   const year = date.getFullYear();
