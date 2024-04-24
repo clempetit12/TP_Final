@@ -7,6 +7,7 @@ import CreateEmployeeForm from "./Employee/CreateEmployeeForm";
 import Dashbord from "./Employee/Dashbord";
 import DetailsEmployee from "./Employee/DetailsEmployee";
 import UpdateEmployeeForm from "./Employee/UpdateEmployeeForm";
+import ReportEmployee from "./WorkTime/ReportEmployee";
 
 
 const authCheck = () => {
@@ -48,6 +49,11 @@ const router = createBrowserRouter([
             element:<UpdateEmployeeForm/>,
             loader : () => authCheck(),
           },
+          {
+            path: "/reportEmployee/:id",
+            element:<ReportEmployee/>,
+            loader : () => authCheck(),
+          }
 
           ],
     }

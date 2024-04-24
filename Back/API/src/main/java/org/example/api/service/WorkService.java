@@ -87,7 +87,11 @@ public class WorkService {
 
 
 
-    public List<WorkTime> getallWorkTime(LocalDate date1, LocalDate date2, Long id) {
+    public List<WorkTime> getallWorkTime() {
+        return workRepository.findAll();
+    }
+
+    public List<WorkTime> getallWorkTimePerEmployee(LocalDate date1, LocalDate date2, Long id) {
         return workRepository.findByDateBetweenAndEmployeeId(date1,date2,id);
     }
 
@@ -157,6 +161,22 @@ public class WorkService {
         return duration.toHours();
     }
 
+    public long getTotalOvertimeForMonth(YearMonth yearMonth, long employeeId) {
+        long totalOvertime = 0;
+        LocalDate firstDayOfMonth = yearMonth.atDay(1);
+        int lastDayOfMonth = yearMonth.lengthOfMonth();
+
+        // Parcours de chaque jour du mois
+        for (int day = 1; day <= lastDayOfMonth; day++) {
+            LocalDate date = LocalDate.of(yearMonth.getYear(), yearMonth.getMonth(), day);
+            long overtimePerDay = getOvertimePerDay(date, employeeId);
+            totalOvertime += overtimePerDay;
+        }
+        System.out.println("overtime" +totalOvertime);
+        return totalOvertime;
+    }
+
+
     public long getTotalHourWorkedForYear(Year year, long employeeId) {
         LocalDate firstDayOfMonth = year.atDay(1);
         LocalDate lastDayOfYear = year.atDay(1).plusYears(1).minusDays(1);
@@ -165,4 +185,19 @@ public class WorkService {
         System.out.println("year"+duration);
         return duration.toHours();
     }
+
+    public long getTotalOvertimeForYear(Year year, Long employeeId) {
+        long totalOvertime = 0;
+        LocalDate firstDayOfYear = year.atDay(1);
+        LocalDate lastDayOfYear = year.atDay(1).plusYears(1).minusDays(1);
+
+
+        for (LocalDate date = firstDayOfYear; date.isBefore(lastDayOfYear.plusDays(1)); date = date.plusDays(1)) {
+            long overtimePerDay = getOvertimePerDay(date, employeeId);
+            totalOvertime += overtimePerDay;
+        }
+
+        return totalOvertime;
+    }
+
 }

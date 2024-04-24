@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/workTime")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class WorkTimeRestController {
 
     @Autowired
@@ -58,7 +59,7 @@ public class WorkTimeRestController {
 
 
         }
-        List<WorkTime> workTimes = workService.getallWorkTime(firstDayOfWeek, lastDayOfWeek, employeeId);
+        List<WorkTime> workTimes = workService.getallWorkTimePerEmployee(firstDayOfWeek, lastDayOfWeek, employeeId);
         long totalWorkHours = workService.calculateTotalWorkHours(workTimes).toHours();
         long totalOvertimeHours = workService.calculateTotalOvertimeHours(workTimes).toHours();
 
@@ -107,9 +108,14 @@ public long getHourPerBetweenTwoDates(@RequestParam Long employeeId, @RequestPar
     }
 
     //Méthode pour récupérer la liste des workTime d'un employé entre deux date (les horaires)
-    @GetMapping("/allWorkTilePerEmployee")
-    public List<WorkTime> getAllWorkTime (@RequestParam Long employeeId, @RequestParam LocalDate date1, @RequestParam LocalDate date2) {
-        return workService.getallWorkTime(date1,date2, employeeId);
+    @GetMapping("/allWorkTimePerEmployee")
+    public List<WorkTime> getAllWorkTimePerEmployee (@RequestParam Long employeeId, @RequestParam LocalDate date1, @RequestParam LocalDate date2) {
+        return workService.getallWorkTimePerEmployee(date1,date2, employeeId);
+    }
+
+    @GetMapping("/allWorkTime")
+    public List<WorkTime> getAllWorkTime () {
+        return workService.getallWorkTime();
     }
 
     //Méthode pour connaître dernier état enregistré par employee (IN ou OUT)
@@ -134,33 +140,46 @@ public long getHourPerBetweenTwoDates(@RequestParam Long employeeId, @RequestPar
     public ReportHourWorked getTotalHourWorked(@RequestParam(required = false) Integer year,
                                    @RequestParam(required = false) Integer month,
                                    @RequestParam(required = false) Integer day, @RequestParam Long employeeId) {
+        System.out.println("hello");
+        System.out.println(employeeId);
         ReportHourWorked reportHourWorked = new ReportHourWorked();
-        if (year != null && month != null && day != null) {
-            LocalDate date = LocalDate.of(year, month, day);
-            reportHourWorked.setHourWorkedDay(workService.getHoursPerDayForOneEmployee(date, employeeId));
-            YearMonth yearMonth = YearMonth.of(year, month);
-            reportHourWorked.setHourWorkedMonth(workService.getTotalHourWorkedForMonth(yearMonth, employeeId));
-            Year year1 = Year.of(year);
-            reportHourWorked.setHourWorkedYear(workService.getTotalHourWorkedForYear(year1, employeeId));
-            long averageHourWorkedPerDay = reportHourWorked.getHourWorkedMonth()/ 4;
-            reportHourWorked.setAverageHourWorkedPerDay(averageHourWorkedPerDay);
-        }
+            System.out.println(year);
+            if(day != null) {
+                LocalDate date = LocalDate.of(year, month, day);
+                reportHourWorked.setOvertimeDay(workService.getOvertimePerDay(date, employeeId));
+                reportHourWorked.setHourWorkedDay(workService.getHoursPerDayForOneEmployee(date, employeeId));
+            }
+            if (month != null) {
+                YearMonth yearMonth = YearMonth.of(year, month);
+                reportHourWorked.setOrvetimeMonth(workService.getTotalOvertimeForMonth(yearMonth, employeeId));
+                reportHourWorked.setHourWorkedMonth(workService.getTotalHourWorkedForMonth(yearMonth, employeeId));
+            }
+            if (year != null) {
+                System.out.println("year"+year);
+                Year year1 = Year.of(year);
+                System.out.println("year" +year1);
+                reportHourWorked.setHourWorkedYear(workService.getTotalHourWorkedForYear(year1, employeeId));
+                reportHourWorked.setOvertimeYear(workService.getTotalOvertimeForYear(year1, employeeId));
+                long numberOfWorkingDays = calculateNumberOfWorkingDays(year1);
+                if (numberOfWorkingDays > 0) {
+                    long averageHourWorkedPerDay = reportHourWorked.getHourWorkedYear() / numberOfWorkingDays;
+                    System.out.println(averageHourWorkedPerDay);
+                    reportHourWorked.setAverageHourWorkedPerDay(averageHourWorkedPerDay);
+                } else {
 
-        if (year != null && month != null) {
-            Year year1 = Year.of(year);
-            reportHourWorked.setHourWorkedYear(workService.getTotalHourWorkedForYear(year1, employeeId));
-            YearMonth yearMonth = YearMonth.of(year, month);
-            reportHourWorked.setHourWorkedMonth(workService.getTotalHourWorkedForMonth(yearMonth, employeeId));
-        }
+                    reportHourWorked.setAverageHourWorkedPerDay(0);
+                }
+            }
 
-        if (year != null) {
-            Year year1 = Year.of(year);
-            reportHourWorked.setHourWorkedYear(workService.getTotalHourWorkedForYear(year1, employeeId));
-        }
+
         return reportHourWorked;
 
 
     }
+
+
+
+
 
 
     public LocalTime getFirstClockIn (Clocking clocking,LocalDate date, long employeeId) {
@@ -179,5 +198,21 @@ public long getHourPerBetweenTwoDates(@RequestParam Long employeeId, @RequestPar
             return null;
         }    }
 
+    public static long calculateNumberOfWorkingDays(Year year) {
+        long numberOfWorkingDays = 0;
+        LocalDate startDate = year.atDay(1); // Premier jour de l'année
+        LocalDate endDate = year.atDay(1).plusYears(1).minusDays(1); // Dernier jour de l'année
+
+        // Itérer sur chaque jour de l'année
+        for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
+            // Vérifier si le jour est un jour ouvrable (lundi à vendredi)
+            DayOfWeek dayOfWeek = date.getDayOfWeek();
+            if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY) {
+                numberOfWorkingDays++;
+            }
+        }
+
+        return numberOfWorkingDays;
+    }
 
 }
