@@ -95,6 +95,16 @@ public long getHourPerBetweenTwoDates(@RequestParam Long employeeId, @RequestPar
         return workService.getHoursPerWeekNumberForOneEmployee(2024, weekNumber,employeeId);
     }
 
+    @GetMapping("getClockIn/{employeeId}")
+    public LocalTime getClockIn(@PathVariable Long employeeId, LocalDate date) {
+       return workService.getfirstClockIn(Clocking.IN,date,employeeId).getHour();
+    }
+
+    @GetMapping("getClockOut/{employeeId}")
+    public LocalTime getClockOut(@PathVariable Long employeeId,@RequestParam LocalDate date) {
+        return workService.getLastClockOut(Clocking.OUT,date,employeeId).getHour();
+    }
+
 
     // Méthode pour ajouter un WorkTime (clickIN ou clickOUT)
     @PostMapping("/addWorkTime")
@@ -200,12 +210,11 @@ public long getHourPerBetweenTwoDates(@RequestParam Long employeeId, @RequestPar
 
     public static long calculateNumberOfWorkingDays(Year year) {
         long numberOfWorkingDays = 0;
-        LocalDate startDate = year.atDay(1); // Premier jour de l'année
+        LocalDate startDate = year.atDay(1);
         LocalDate endDate = year.atDay(1).plusYears(1).minusDays(1); // Dernier jour de l'année
 
         // Itérer sur chaque jour de l'année
         for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
-            // Vérifier si le jour est un jour ouvrable (lundi à vendredi)
             DayOfWeek dayOfWeek = date.getDayOfWeek();
             if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY) {
                 numberOfWorkingDays++;

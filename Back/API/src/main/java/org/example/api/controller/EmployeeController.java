@@ -44,7 +44,6 @@ public class EmployeeController {
         List<EmployeeDto> employeeDtos = employeeService.getAllEmployees().stream()
                 .map(MapperEmployeeDto::convertToDto)
                 .collect(Collectors.toList());
-
         return employeeDtos;
     }
 

@@ -24,7 +24,17 @@ function App() {
 
   return (
     <main className={styles.main}>
-      <section className={styles.sectionOne}></section>
+    <section className={styles.sectionOne}>
+  <div className="d-flex justify-content-center p-5" style={{ height: "100%" }}>
+    <img
+      src={require("./assets/logo.png")}
+      alt="Circle"
+      className="img-fluid rounded-circle mr-3"
+      style={{ width: "100px", height: "100px" }}
+    />
+  </div>
+</section>
+
       <section className={styles.sectionTwo}>
         <form className={styles.form} onSubmit={onSubmit}>
           <div className={styles.email}>

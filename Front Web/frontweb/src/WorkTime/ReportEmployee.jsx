@@ -94,7 +94,7 @@ const ReportEmployee = () => {
                     <hr />
                     <div className="d-inline-block p-4"> {/* Première colonne */}
                     <Form>
-                        <h1 className="text-center">Année</h1>
+                        <h1 className="text-center">Year</h1>
                         <Form.Select onChange={handleYearChange}>
                             <option value="">Sélectionner une année</option>
                             {generateYearOptions()}
@@ -103,7 +103,7 @@ const ReportEmployee = () => {
                 </div>
                 <div className="d-inline-block p-4"> {/* Deuxième colonne */}
                     <Form>
-                        <h1 className="text-center">Mois</h1>
+                        <h1 className="text-center">Month</h1>
                         <Form.Select onChange={handleMonthChange}>
                             <option value="">Sélectionner un mois</option>
                             {generateMonthOptions()}
@@ -112,14 +112,14 @@ const ReportEmployee = () => {
                 </div>
                 <div className="d-inline-block p-4"> {/* Troisième colonne */}
                     <Form>
-                        <h1 className="text-center">Jour</h1>
+                        <h1 className="text-center">Day</h1>
                         <Form.Select onChange={handleDayChange}>
                             <option value="">Sélectionner un jour</option>
                             {generateDayOptions()}
                         </Form.Select>
                     </Form>
                 </div>
-            <div className="p-5">
+            <div className="p-53">
             {report && (
                         <table className="table">
                             <thead>
@@ -153,7 +153,7 @@ const ReportEmployee = () => {
         : ''}
 </td>
 
-                                    <td>{report.overtimeDay + report.overtimeDay}</td>
+                                    <td>{report.hourWorkedDay + report.overtimeDay}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -162,6 +162,7 @@ const ReportEmployee = () => {
             </div>
                     
                     <hr />
+                    <h1 className="display-6 text-center">Print report</h1>
                  
                     <div className="d-grid gap-2">
                         <button className="btn btn-primary">Print</button>

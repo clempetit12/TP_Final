@@ -8,6 +8,7 @@ export const getAllEmployees = createAsyncThunk(
     "employee/getAllEmployees",
     async () => {
         try {
+          console.log(accountService.getToken());
           const response = await axios.get(`${BASE_API_URL}/admin/employees`, { headers: accountService.getToken()});
           return response.data;
         } catch (error) {

@@ -1,6 +1,6 @@
 .header{
     background-color: #1F1BD5;
-    height: 5vh;
+    height: 10vh;
 }
 
 .divLogout{
@@ -48,6 +48,10 @@
 .a{
     text-decoration: none;
     color: white;
+}
+.btn-custom {
+    width: 200px;
+    height: 40px; 
 }
 
 

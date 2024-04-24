@@ -32,7 +32,9 @@ public class MapperEmployeeDto {
         workTimeDto.setId(workTime.getId());
 //        workTimeDto.setStartHour(workTime.getStartHour());
 //        workTimeDto.setEndHour(workTime.getEndHour());
+        workTimeDto.setHour(workTime.getHour());
         workTimeDto.setDate(workTime.getDate());
+        workTimeDto.setClocking(workTime.getClocking());
         return workTimeDto;
     }
 

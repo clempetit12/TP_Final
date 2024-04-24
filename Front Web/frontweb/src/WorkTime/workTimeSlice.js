@@ -95,6 +95,35 @@ export const getReport = createAsyncThunk(
     }
 )
 
+export const getClockIn = createAsyncThunk(
+  'workTime/getClockIn',
+  async (employeeId,currentDate) => {
+      try {
+        const currentDate = new Date().toISOString().split('T')[0]; 
+console.log(currentDate);
+          const response = await axios.get(`${API_URL}/getClockIn/${employeeId}?date=${currentDate}`);
+          console.log("in"+response.data);
+          return response.data;
+      } catch (error) {
+          throw error;
+      }
+  }
+)
+
+export const getClockOut = createAsyncThunk(
+  'workTime/getClockOut',
+  async (employeeId,currentDate) => {
+  
+      try {
+        const currentDate = new Date().toISOString().split('T')[0]; 
+          const response = await axios.get(`${API_URL}/getClockOut/${employeeId}?date=${currentDate}`);
+          return response.data;
+      } catch (error) {
+          throw error;
+      }
+  }
+)
+
 export const getWeeklySummary = createAsyncThunk(
   'workTime/weeklySummary',
   async ({selectedWeek}) => {
@@ -154,6 +183,8 @@ const workTimeSlice = createSlice({
         loading: false,
         error: null,
         report: null,
+        clockIn: null, 
+    clockOut: null, 
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -197,6 +228,33 @@ const workTimeSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
+            .addCase(getClockIn.pending, (state) => {
+              state.loading = true;
+              state.error = null;
+          })
+          .addCase(getClockIn.fulfilled, (state, action) => {
+              state.loading = false;
+              state.error = null;
+              state.clockIn = action.payload; 
+          })
+          .addCase(getClockIn.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error.message;
+          })
+          .addCase(getClockOut.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(getClockOut.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = null;
+            state.clockOut = action.payload; 
+        })
+        .addCase(getClockOut.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        })
+         
            
     },
 })
