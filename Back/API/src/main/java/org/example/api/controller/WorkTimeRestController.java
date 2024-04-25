@@ -82,24 +82,14 @@ public class WorkTimeRestController {
         return weekNumber;
     }
 
-    // Méthode pour récupérer le nombre d'heures travaillées entre deux dates
-    @GetMapping("/hoursByDate")
-public long getHourPerBetweenTwoDates(@RequestParam Long employeeId, @RequestParam  LocalDate date1, @RequestParam  LocalDate date2) {
-        return workService.getHoursPerWeekForOneEmployee(date1,date2,employeeId);
-
-    }
-
-    // Méthode pour récupérer le nombre d'heures travaillées selon un numéro de semaine
-    @GetMapping("/hoursPerWeekNumber")
-    public long getHourPerWeekNumber(@RequestParam Long employeeId,@RequestParam  int weekNumber) {
-        return workService.getHoursPerWeekNumberForOneEmployee(2024, weekNumber,employeeId);
-    }
+    //Méthode pour récupérer heure du premier clockin d'un employee
 
     @GetMapping("getClockIn/{employeeId}")
     public LocalTime getClockIn(@PathVariable Long employeeId, LocalDate date) {
        return workService.getfirstClockIn(Clocking.IN,date,employeeId).getHour();
     }
 
+    //Méthode pour récupérer heure du dernier clockout d'un employee
     @GetMapping("getClockOut/{employeeId}")
     public LocalTime getClockOut(@PathVariable Long employeeId,@RequestParam LocalDate date) {
         return workService.getLastClockOut(Clocking.OUT,date,employeeId).getHour();
@@ -187,7 +177,83 @@ public long getHourPerBetweenTwoDates(@RequestParam Long employeeId, @RequestPar
 
     }
 
+    //Requete pour envoyer heures travaillées par année pour un employee
+    @GetMapping("/getTotalHourWorkedYear")
+    public ReportHourWorked getTotalHourWorkedYear(@RequestParam Integer year, @RequestParam Long employeeId) {
+        System.out.println("year");
+        System.out.println(employeeId);
+        ReportHourWorked reportHourWorked = new ReportHourWorked();
+        System.out.println(year);
+        if (year != null) {
+            System.out.println("year"+year);
+            Year year1 = Year.of(year);
+            System.out.println("year" +year1);
+            reportHourWorked.setHourWorkedYear(workService.getTotalHourWorkedForYear(year1, employeeId));
+            reportHourWorked.setOvertimeYear(workService.getTotalOvertimeForYear(year1, employeeId));
+            long numberOfWorkingDays = calculateNumberOfWorkingDays(year1);
+            if (numberOfWorkingDays > 0) {
+                long averageHourWorkedPerDay = reportHourWorked.getHourWorkedYear() / numberOfWorkingDays;
+                System.out.println(averageHourWorkedPerDay);
+                reportHourWorked.setAverageHourWorkedPerDay(averageHourWorkedPerDay);
 
+            } else {
+
+                reportHourWorked.setAverageHourWorkedPerDay(0);
+            }
+        }
+
+
+        return reportHourWorked;
+
+
+    }
+
+    //Requete pour envoyer heures travaillées par mois pour un employee
+    @GetMapping("/getTotalHourWorkedMonth")
+    public ReportHourWorked getTotalHourWorkedMonth(@RequestParam Integer year,
+                                               @RequestParam Integer month
+                                            , @RequestParam Long employeeId) {
+        System.out.println("hello");
+        System.out.println(employeeId);
+        ReportHourWorked reportHourWorked = new ReportHourWorked();
+        if (month != null) {
+            YearMonth yearMonth = YearMonth.of(year, month);
+            reportHourWorked.setOrvetimeMonth(workService.getTotalOvertimeForMonth(yearMonth, employeeId));
+            reportHourWorked.setHourWorkedMonth(workService.getTotalHourWorkedForMonth(yearMonth, employeeId));
+
+                reportHourWorked.setAverageHourWorkedPerDay(0);
+
+        }
+
+
+        return reportHourWorked;
+
+
+    }
+    //Requete pour envoyer heures travaillées par jour pour un employee
+    @GetMapping("/getTotalHourWorkedDay")
+    public ReportHourWorked getTotalHourWorkedDay(@RequestParam(required = false) Integer year,
+                                               @RequestParam(required = false) Integer month,
+                                               @RequestParam(required = false) Integer day, @RequestParam Long employeeId) {
+        System.out.println("hello");
+        System.out.println(employeeId);
+        ReportHourWorked reportHourWorked = new ReportHourWorked();
+        System.out.println(year);
+        if(day != null) {
+            LocalDate date = LocalDate.of(year, month, day);
+            reportHourWorked.setOvertimeDay(workService.getOvertimePerDay(date, employeeId));
+            reportHourWorked.setHourWorkedDay(workService.getHoursPerDayForOneEmployee(date, employeeId));
+
+
+                reportHourWorked.setAverageHourWorkedPerDay(0);
+            }
+
+
+
+        return reportHourWorked;
+
+
+    }
 
 
 

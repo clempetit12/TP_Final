@@ -17,8 +17,7 @@ const Details = () => {
     const [dateVisible, setDateVisible] = useState(false);
     const [calendarDate, setCalendarDate] = useState(new Date());
     const weeklySummary = useSelector(state => state.workTime.weeklySummary);
-
-    const weekNumber = useSelector(state => state.workTime.weekNumber);
+    const [weekNumber, setWeekNumber] = useState(1);
 
     const onDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || calendarDate;
@@ -27,12 +26,13 @@ const Details = () => {
         setDateVisible(false);
     };
 
-    const [selectedWeek, setSelectedWeek] = useState(1);
+  
 
     const handleWeekChange = (inputText) => {
-        const weekNumber = parseInt(inputText);
-        if (!isNaN(weekNumber) && weekNumber >= 1 && weekNumber <= 52) {
-          setSelectedWeek(weekNumber);
+        const  newWeekNumber = parseInt(inputText);
+        if (!isNaN(newWeekNumber) && newWeekNumber >= 1 && newWeekNumber <= 52) {
+          setWeekNumber(newWeekNumber);
+          console.log("selectedWeek"+ newWeekNumber)
         }
       };
 
@@ -43,23 +43,16 @@ const Details = () => {
   
 
     useEffect(() => {
-        const formattedStartDate = moment(startDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
-        console.log("formattedStartDate", formattedStartDate);
-        
-        dispatch(getWeekNumber({ date: formattedStartDate })).then((action) => {
-            console.log("weeknumber", action.payload);
-            
-           console.log("selectedweek" + selectedWeek)
+      console.log("selectedWeek changed:", weekNumber);
+           console.log("selectedweek" + weekNumber)
       
-            dispatch(getWeeklySummary({selectedWeek }));
-
-            console.table(weeklySummary);
-            console.log("weekly summary - key1:", weeklySummary.key1);
-console.log("weekly summary - key2:", weeklySummary.key2);
+            dispatch(getWeeklySummary({weekNumber: weekNumber}));
 
 
-        });
-    }, [dispatch, startDate]);
+
+
+        
+    }, [dispatch,weekNumber ]);
 
     
     const renderRow = (daySummary) => {
@@ -78,7 +71,7 @@ console.log("weekly summary - key2:", weeklySummary.key2);
  <View style={styles.container}>
       <Text>Sélectionnez une semaine :</Text>
       <Picker
-        selectedValue={selectedWeek}
+        selectedValue={weekNumber}
         onValueChange={(itemValue, itemIndex) => handleWeekChange(itemValue)}
       >
         {[...Array(52).keys()].map((week) => (

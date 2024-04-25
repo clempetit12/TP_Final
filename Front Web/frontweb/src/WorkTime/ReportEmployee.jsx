@@ -5,7 +5,7 @@ import { getEmployeeById } from "../Employee/EmployeeSlice";
 import DatePicker from "react-datepicker";
 import Form from 'react-bootstrap/Form';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getReport } from "./workTimeSlice";
+import { getHourWorkedDay, getHourWorkedMonth, getHourWorkedYear, getReport } from "./workTimeSlice";
 
 const ReportEmployee = () => {
     const { id } = useParams();
@@ -15,7 +15,9 @@ const ReportEmployee = () => {
     const [selectedYear, setSelectedYear] = useState('');
     const [selectedMonth, setSelectedMonth] = useState('');
     const [selectedDay, setSelectedDay] = useState('');
-    const report = useSelector(state => state.workTime.report);
+    const   hourWorkedYear = useSelector(state => state.workTime.  hourWorkedYear);
+    const      hourWorkedMonth = useSelector(state => state.workTime.  hourWorkedMonth);
+    const    hourWorkedDay = useSelector(state => state.workTime.  hourWorkedDay);
     
     // Générer les options pour les années
     const generateYearOptions = () => {
@@ -42,7 +44,6 @@ const ReportEmployee = () => {
             { value: 10, label: 'Octobre' },
             { value: 11, label: 'Novembre' },
             { value: 12, label: 'Décembre' },
-        
         ];
         return months.map(month => (
             <option key={month.value} value={month.value}>{month.label}</option>
@@ -62,7 +63,7 @@ const ReportEmployee = () => {
         const selectedYear = e.target.value;
         setSelectedYear(selectedYear);
         const employeeId = employee.id;
-        dispatch(getReport({ selectedYear, selectedMonth, selectedDay, employeeId }));
+        dispatch(getHourWorkedYear({ selectedYear, employeeId }));
     };
 
     const handleMonthChange = (e) => {
@@ -70,7 +71,7 @@ const ReportEmployee = () => {
         setSelectedMonth(selectedMonth);
         console.log("selectedmonth"+selectedMonth)
         const employeeId = employee.id;
-        dispatch(getReport({ selectedYear, selectedMonth, selectedDay, employeeId }));
+        dispatch(getHourWorkedMonth({ selectedYear, selectedMonth, employeeId }));
     };
 
     const handleDayChange = (e) => {
@@ -78,7 +79,7 @@ const ReportEmployee = () => {
         setSelectedDay(selectedDay);
         console.log("day" +selectedDay)
         const employeeId = employee.id;
-        dispatch(getReport({ selectedYear, selectedMonth, selectedDay, employeeId }));
+        dispatch(getHourWorkedDay({ selectedYear, selectedMonth, selectedDay, employeeId }));
     };
   
     useEffect(() => {
@@ -86,91 +87,80 @@ const ReportEmployee = () => {
     }, [dispatch, id]);
    
     return (
-        <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
-            {employee && (
-                <div>
-                    <h1 className="display-5 text-center">Rapport de {employee.firstname} {employee.lastname}</h1>
-                    <h2 className="display-6 text-center">{employee.jobTitle}</h2>
-                    <hr />
-                    <div className="d-inline-block p-4"> {/* Première colonne */}
-                    <Form>
-                        <h1 className="text-center">Year</h1>
-                        <Form.Select onChange={handleYearChange}>
-                            <option value="">Sélectionner une année</option>
+        <div className="container ">
+          {employee && (
+            <div>
+              <h1 className="display-5 text-center">Rapport de {employee.firstname} {employee.lastname}</h1>
+              <h2 className="display-6 text-center">{employee.jobTitle}</h2>
+              <hr />
+              <div className="row  justify-content-center ">
+                <div className="col-3 ">
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="card-title text-center font-bold">Year</h5>
+                      <p className="card-text">
+                        <Form>
+                          <Form.Select onChange={handleYearChange}>
+                            <option value="">Select a year</option>
                             {generateYearOptions()}
-                        </Form.Select>
-                    </Form>
-                </div>
-                <div className="d-inline-block p-4"> {/* Deuxième colonne */}
-                    <Form>
-                        <h1 className="text-center">Month</h1>
-                        <Form.Select onChange={handleMonthChange}>
-                            <option value="">Sélectionner un mois</option>
-                            {generateMonthOptions()}
-                        </Form.Select>
-                    </Form>
-                </div>
-                <div className="d-inline-block p-4"> {/* Troisième colonne */}
-                    <Form>
-                        <h1 className="text-center">Day</h1>
-                        <Form.Select onChange={handleDayChange}>
-                            <option value="">Sélectionner un jour</option>
-                            {generateDayOptions()}
-                        </Form.Select>
-                    </Form>
-                </div>
-            <div className="p-53">
-            {report && (
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Year</th>
-                                    <th scope="col">Month</th>
-                                    <th scope="col">Day</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">Time worked</th>
-                                    <td>{report.hourWorkedYear}</td>
-                                    <td>{report.hourWorkedMonth}</td>
-                                    <td>{report.hourWorkedDay}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Overtime worked</th>
-                                    <td>{report.overtimeYear}</td>
-                                    <td>{report.overtimeMonth}</td>
-                                    <td>{report.overtimeDay}</td>
-                                </tr>
-
-                                <tr>
-                                    <th scope="row">Total Hours</th>
-                                    <td>{report.overtimeYear + report.hourWorkedYear} </td>
-                                    <td>
-    {(!isNaN(report.overtimeMonth) && !isNaN(report.overtimeMonth)) 
-        ? report.overtimeMonth + report.overtimeMonth 
-        : ''}
-</td>
-
-                                    <td>{report.hourWorkedDay + report.overtimeDay}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    )}
-
-            </div>
-                    
-                    <hr />
-                    <h1 className="display-6 text-center">Print report</h1>
-                 
-                    <div className="d-grid gap-2">
-                        <button className="btn btn-primary">Print</button>
+                          </Form.Select>
+                        </Form>
+                      </p>
+                      <p>Time worked: {hourWorkedYear && (hourWorkedYear.hourWorkedYear)}</p>
+                      <p >Overtime worked: <p className="text-danger">{hourWorkedYear && (hourWorkedYear.overtimeYear)}</p> </p>
+                      <p>Total hour: {hourWorkedYear && (hourWorkedYear.overtimeYear + hourWorkedYear.hourWorkedYear )}</p>
                     </div>
+                  </div>
                 </div>
-            )}
+                <div className="col-3 ">
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="card-title text-center">Month</h5>
+                      <p className="card-text">
+                        <Form>
+                          <Form.Select onChange={handleMonthChange}>
+                            <option value="">Select a month</option>
+                            {generateMonthOptions()}
+                          </Form.Select>
+                        </Form>
+                      </p>
+                      <p>Time worked: {hourWorkedMonth && (hourWorkedMonth.hourWorkedMonth)}</p>
+                      <p >Overtime worked: <p className="text-danger">{hourWorkedMonth && (hourWorkedMonth.overtimeMonth)}</p> </p>
+                      <p>Total hour worked: {hourWorkedMonth && (hourWorkedMonth.overtimeMonth || 0 + hourWorkedMonth.hourWorkedMonth || 0 )}</p>
+                 
+                    </div>
+                  </div>
+                </div>
+                <div className="col-3">
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="card-title text-center">Day</h5>
+                      <p className="card-text">
+                        <Form>
+                          <Form.Select onChange={handleDayChange}>
+                            <option value="">Select a day</option>
+                            {generateDayOptions()}
+                          </Form.Select>
+                        </Form>
+                      </p>
+                      <p>Time worked: {hourWorkedDay && (hourWorkedDay.hourWorkedDay)}</p>
+                      <p > Overtime worked: {hourWorkedDay && (hourWorkedDay.overtimeDay)}</p>
+                      <p>Total hour worked: {hourWorkedDay && (hourWorkedDay.overtimeDay || 0 +  hourWorkedDay.hourWorkedDay || 0)}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+             
+              <hr />
+              <h1 className="display-6 text-center">Print report</h1>
+              <div className="d-grid gap-2">
+                <button className="btn btn-primary">Print</button>
+              </div>
+            </div>
+          )}
         </div>
-    );
-};
+      );
+      
 
+}
 export default ReportEmployee;

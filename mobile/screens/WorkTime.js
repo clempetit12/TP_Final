@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native'
 import WorkTimeButton from '../components/WorkTimeButton';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLastStatus, getWeekNumber } from './workTimeSlice';
+import { addWorkTime, getLastStatus, getWeekNumber } from './workTimeSlice';
 
  const WorkTime = () => {
 
@@ -11,7 +11,19 @@ import { getLastStatus, getWeekNumber } from './workTimeSlice';
 const dispatch = useDispatch();
 const lastStatus = useSelector(state => state.workTime.lastStatus);
 const weekNumber = useSelector(state => state.workTime.weekNumber);
+const [employeeId, setEmployeeId] = useState(1)
+const laststatus = useSelector(state => state.workTime.lastStatus);
+const [isClockInDisabled, setIsClockInDisabled] = useState(false)
+const [isClockOutDisabled, setIsClockOutDisabled] = useState(false)
 
+
+
+    useEffect(() => {
+      dispatch(getLastStatus(employeeId,currentDateValue))
+      console.log(currentDateValue)
+      console.log(employeeId)
+    }, [dispatch,employeeId,currentDateValue]);
+     
 
 const getCurrentDate = () => {
   const date = new Date();
@@ -26,11 +38,24 @@ const getCurrentDate = () => {
 const[currentDateValue, setCurrenDateValue] = useState(getCurrentDate());
 
 
+const handleClockInPress = () => {
+  setIsClockInDisabled(true);
+  setIsClockOutDisabled(false);
+
+};
+
+const handleClockOutPress = () => {
+  setIsClockOutDisabled(true);
+  setIsClockInDisabled(false);
+
+};
+
 
 useEffect(() => {
   console.log("currentdate"+currentDateValue)
   dispatch(getLastStatus());
   dispatch(getWeekNumber(currentDateValue));
+
 
   console.log("weeknumber"+weekNumber)
   console.log("status"+ lastStatus)
@@ -60,14 +85,21 @@ useEffect(() => {
     
           <View style={styles.buttonsContainer}>
       
-          <TouchableOpacity onPress={() => handleButtonClick("IN")}>
-            <WorkTimeButton clocking="IN" />
-          </TouchableOpacity>
-     
-   
-          <TouchableOpacity onPress={() => handleButtonClick("OUT")}>
-            <WorkTimeButton clocking="OUT" />
-          </TouchableOpacity>
+          <TouchableOpacity
+                style={[styles.button, { backgroundColor: "red", opacity: isClockInDisabled ? 0.5 : 1 }]}
+                onPress={handleClockInPress}
+                disabled={isClockInDisabled}
+            >
+                <Text style={styles.buttonText}>ClockIn</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={[styles.button, { backgroundColor: "green", opacity: isClockOutDisabled ? 0.5 : 1 }]}
+                onPress={handleClockOutPress}
+                disabled={isClockOutDisabled}
+            >
+                <Text style={styles.buttonText}>ClockOut</Text>
+            </TouchableOpacity>
         
       </View>
 
@@ -134,6 +166,19 @@ useEffect(() => {
         borderBottomWidth: 1,
         borderBottomColor: 'black', 
         marginBottom: 10, 
+      },
+      button: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+        height: 100,
+        borderRadius: 10,
+        marginBottom : 20
+      },
+      buttonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white',
       }
     });
     

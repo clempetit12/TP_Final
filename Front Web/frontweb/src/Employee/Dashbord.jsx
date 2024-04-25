@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllEmployees } from "./EmployeeSlice";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ const Dashboard = () => {
   const worktimes = useSelector((state) => state.workTime.worktimes);
   const clockIn = useSelector((state) => state.workTime.clockIn);
   const clockOut = useSelector((state) => state.workTime.clockOut);
+
 
   const getTotalEmployees = () => employees.length;
   const getEmployeesWithClockIn = () => employees.filter(employee => employee.workTimes && employee.workTimes.length > 0 && renderClockIn(employee) !== null).length;
@@ -52,21 +53,21 @@ const calculatePercentage = () => {
     navigate("/reportEmployee/" + employeeId);
   };
 
-  const getClockInAndOut = (employee) => {
+  const getClockInAndOut = (employee, currentDate) => {
     const clockInsAndOuts = {};
     if (employee.workTimes ) {
       employee.workTimes.forEach((workTime) => {
-        if (!clockInsAndOuts[workTime.date]) {
-          clockInsAndOuts[workTime.date] = {
+        if (!clockInsAndOuts[workTime.currentDate]) {
+          clockInsAndOuts[workTime.currentDate] = {
             clockIn: null,
             clockOut: null,
           };
         }
-        if (workTime.clocking === 'IN' && !clockInsAndOuts[workTime.date].clockIn) {
-          clockInsAndOuts[workTime.date].clockIn = workTime.hour;
+        if (workTime.clocking === 'IN' && !clockInsAndOuts[workTime.currentDate].clockIn) {
+          clockInsAndOuts[workTime.currentDate].clockIn = workTime.hour;
         }
         if (workTime.clocking === 'OUT') {
-          clockInsAndOuts[workTime.date].clockOut = workTime.hour;
+          clockInsAndOuts[workTime.currentDate].clockOut = workTime.hour;
         }
       });
     }
@@ -74,13 +75,13 @@ const calculatePercentage = () => {
   };
   
 
-  const renderClockIn = (employee) => {
+  const renderClockIn = (employee, currentDate) => {
     const clockInsAndOuts = getClockInAndOut(employee);
-    return Object.keys(clockInsAndOuts).map((date) => {
-      const clockIn = clockInsAndOuts[date].clockIn;
+    return Object.keys(clockInsAndOuts).map((currentDate) => {
+      const clockIn = clockInsAndOuts[currentDate].clockIn;
       return (
-        <div key={`${employee.id}-${date}-clockIn`}>
-          {clockIn && `Clock In: ${clockIn}`}
+        <div key={`${employee.id}-${currentDate}-clockIn`}>
+          {clockIn && ` ${clockIn}`}
         </div>
       );
     });
@@ -88,11 +89,11 @@ const calculatePercentage = () => {
   
   const renderClockOut = (employee) => {
     const clockInsAndOuts = getClockInAndOut(employee);
-    return Object.keys(clockInsAndOuts).map((date) => {
-      const clockOut = clockInsAndOuts[date].clockOut;
+    return Object.keys(clockInsAndOuts).map((currentDate) => {
+      const clockOut = clockInsAndOuts[currentDate].clockOut;
       return (
-        <div key={`${employee.id}-${date}-clockOut`}>
-          {clockOut && `Clock Out: ${clockOut}`}
+        <div key={`${employee.id}-${currentDate}-clockOut`}>
+          {clockOut && ` ${clockOut}`}
         </div>
       );
     });
@@ -125,7 +126,7 @@ const calculatePercentage = () => {
                 <td>{employee.id}</td>
                 <td>{employee.lastname}</td>
                 <td>{employee.firstname}</td>
-                <td>{renderClockIn(employee)}</td>
+                <td>{renderClockIn(employee,  getCurrentDate())}</td>
         <td>{renderClockOut(employee)}</td>
                 <td className="text-center">
                   <button className="btn btn-outline-primary" onClick={() => handleDetailsEmployee(employee.id)}>Details</button>

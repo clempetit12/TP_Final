@@ -39,12 +39,12 @@ const getCurrentDate = () => {
 
 export const getLastStatus = createAsyncThunk(
     'workTime/lastStatus',
-    async () => {
+    async ({currentDateValue,employeeId}) => {
         try {
+          const formattedDate = getCurrentDate();
+          console.log(formattedDate)
             const employeeId = 1;
-            const currentDate = getCurrentDate();
-            console.log("currentdate"+currentDate)
-            const response = await fetch(`${API_URL}/lastStatusEmployee?id=${employeeId}&date=${currentDate}`, {
+            const response = await fetch(`${API_URL}/lastStatusEmployee?id=${employeeId}&date=2024-04-25`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
@@ -85,12 +85,13 @@ export const getWeekNumber = createAsyncThunk(
 
 export const getWeeklySummary = createAsyncThunk(
   'workTime/weeklySummary',
-  async ({selectedWeek}) => {
+  async ({weekNumber}) => {
       try {
         console.log("weeklySummary")
+        const weekNumberInt = weekNumber && !isNaN(Number(weekNumber)) ? Number(weekNumber) : 1;
           const employeeId = 1;
-          console.log("selectedw weekly" + selectedWeek)
-          const response = await fetch(`${API_URL}/weeklySummary?weekNumber=${selectedWeek}&employeeId=${employeeId}`, {
+          console.log("selectedw weekly" + weekNumber)
+          const response = await fetch(`${API_URL}/weeklySummary?weekNumber=${weekNumberInt}&employeeId=${employeeId}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -110,30 +111,6 @@ export const getWeeklySummary = createAsyncThunk(
 
 
 
-export const getHoursPerWeek = createAsyncThunk(
-    'workTime/HoursPerWeek',
-    async () => {
-        try {
-            const employeeId = 1;
-            const currentDate = getCurrentDate();
-            console.log("currentdate"+currentDate)
-            const response = await fetch(`${API_URL}/weeklySummary?id=${employeeId}&date=${currentDate}`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-            const data = await response.json(); 
-            console.log("status"+data)
-           return data;
-          } catch (error) {
-            console.error('Erreur lors de la récupération du dernier statut :', error);
-          }
-        }
-    
-);
-
-
 
 
 
@@ -145,6 +122,8 @@ const workTimeSlice = createSlice({
     initialState: {
         loading: false,
         error: null,
+        lastStatus: null,
+        weekNumber: null
     },
     reducers: {},
     extraReducers: (builder) => {

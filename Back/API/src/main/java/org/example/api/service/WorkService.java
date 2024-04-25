@@ -200,4 +200,22 @@ public class WorkService {
         return totalOvertime;
     }
 
+
+
+    public static long calculateNumberOfWorkingDays(Year year) {
+        long numberOfWorkingDays = 0;
+        LocalDate startDate = year.atDay(1);
+        LocalDate endDate = year.atDay(1).plusYears(1).minusDays(1); // Dernier jour de l'année
+
+        // Itérer sur chaque jour de l'année
+        for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
+            DayOfWeek dayOfWeek = date.getDayOfWeek();
+            if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY) {
+                numberOfWorkingDays++;
+            }
+        }
+
+        return numberOfWorkingDays;
+    }
+
 }

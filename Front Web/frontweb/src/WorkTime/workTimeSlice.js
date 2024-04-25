@@ -31,6 +31,7 @@ export const getWeekNumber = createAsyncThunk(
               headers: {
                 "access-control-allow-origin" : "*",
                 'Content-Type': 'application/json',
+
               },
             });
             const data = await response.json(); 
@@ -43,56 +44,77 @@ export const getWeekNumber = createAsyncThunk(
     
 );
 
-// export const getReport = createAsyncThunk(
-//     'workTime/Report',
-//     async ({selectedYear,employeeId}) => {
-//         try {
-//             const token = accountService.getToken()
-//             console.log("selectedyear"+selectedYear)
-//             console.log(token)
-            
-//             const response = await fetch(`${API_URL}/getTotalHourWorked?$year=${selectedYear}&employeeId=${employeeId}`, {
-//               method: 'GET',
-//               headers: {
-//                 'Content-Type': 'application/json',
-//                 'Authorization': `Bearer ${token}`
-//               },
-//             });
-//             const data = await response.json(); 
-//             console.log("report"+data)
-//            return data;
-//           } catch (error) {
-//             console.error('Erreur lors de la récupération du dernier statut :', error);
-//           }
-//         }
-    
-// );
 
-
-export const getReport = createAsyncThunk(
-    "workTime/Report'",
-    async ({selectedYear, selectedMonth, selectedDay, employeeId }) => {
+export const getHourWorkedYear = createAsyncThunk(
+    "workTime/ReportYear'",
+    async ({selectedYear, employeeId }) => {
+      const intValue = parseInt(selectedYear, 10);
+      console.log(accountService.getToken())
         try {
-            console.log(employeeId)
-            console.log("selec" +selectedYear)
-            const intValue = parseInt(selectedYear, 10);
-            const intMonth = parseInt(selectedMonth, 10);
-            console.log(intMonth)
-            const intDay = parseInt(selectedDay, 10);
-            console.log(intDay)
-            if (Number.isInteger(intValue)) {
+            if (Number.isInteger(selectedYear)) {
                 console.log("La valeur est un entier (Integer).");
-                console.log(intValue)
+                console.log(selectedYear)
               } else {
                 console.log("La valeur n'est pas un entier (Integer).");
               }
-           const response = await axios.get(`${API_URL}/getTotalHourWorked?year=${intValue}&month=${intMonth}&day=${intDay}&employeeId=${employeeId}`);
+           const response = await axios.get(`${API_URL}/getTotalHourWorkedYear?year=${intValue}&employeeId=${employeeId}`,{ headers: accountService.getToken()});
            console.log(response.data)
             return response.data;
           } catch (error) {
             throw error;
           }
     }
+)
+
+export const getHourWorkedMonth = createAsyncThunk(
+  "workTime/ReportMonth'",
+  async ({selectedYear, selectedMonth, employeeId }) => {
+      try {
+          console.log(employeeId)
+          console.log("selec" +selectedYear)
+          const intValue = parseInt(selectedYear, 10);
+          const intMonth = parseInt(selectedMonth, 10);
+          console.log(intMonth)
+     
+          if (Number.isInteger(intValue)) {
+              console.log("La valeur est un entier (Integer).");
+              console.log(intValue)
+            } else {
+              console.log("La valeur n'est pas un entier (Integer).");
+            }
+         const response = await axios.get(`${API_URL}/getTotalHourWorked?year=${intValue}&month=${intMonth}&employeeId=${employeeId}`,{ headers: accountService.getToken()});
+         console.log(response.data)
+          return response.data;
+        } catch (error) {
+          throw error;
+        }
+  }
+)
+
+export const getHourWorkedDay = createAsyncThunk(
+  "workTime/ReportDay'",
+  async ({selectedYear, selectedMonth, selectedDay, employeeId }) => {
+      try {
+          console.log(employeeId)
+          console.log("selec" +selectedYear)
+          const intValue = parseInt(selectedYear, 10);
+          const intMonth = parseInt(selectedMonth, 10);
+          console.log(intMonth)
+          const intDay = parseInt(selectedDay, 10);
+          console.log(intDay)
+          if (Number.isInteger(intValue)) {
+              console.log("La valeur est un entier (Integer).");
+              console.log(intValue)
+            } else {
+              console.log("La valeur n'est pas un entier (Integer).");
+            }
+         const response = await axios.get(`${API_URL}/getTotalHourWorked?year=${intValue}&month=${intMonth}&day=${intDay}&employeeId=${employeeId}`,{ headers: accountService.getToken()});
+         console.log(response.data)
+          return response.data;
+        } catch (error) {
+          throw error;
+        }
+  }
 )
 
 export const getClockIn = createAsyncThunk(
@@ -182,7 +204,9 @@ const workTimeSlice = createSlice({
     initialState: {
         loading: false,
         error: null,
-        report: null,
+        hourWorkedYear : null,
+        hourWorkedMonth : null,
+        hourWorkedDay : null,
         clockIn: null, 
     clockOut: null, 
     },
@@ -199,19 +223,6 @@ const workTimeSlice = createSlice({
                 state.weekNumber = action.payload; 
             })
             .addCase(getWeekNumber.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-            })
-            .addCase(getReport.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(getReport.fulfilled, (state, action) => {
-                state.loading = false;
-                state.error = null;
-                state.report = action.payload; 
-            })
-            .addCase(getReport.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })
@@ -254,6 +265,45 @@ const workTimeSlice = createSlice({
             state.loading = false;
             state.error = action.error.message;
         })
+        .addCase(getHourWorkedYear.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+      })
+      .addCase(getHourWorkedYear.fulfilled, (state, action) => {
+          state.loading = false;
+          state.error = null;
+          state.hourWorkedYear = action.payload; 
+      })
+      .addCase(getHourWorkedYear.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.error.message;
+      })
+      .addCase(getHourWorkedMonth.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+    })
+    .addCase(getHourWorkedMonth.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.hourWorkedMonth = action.payload; 
+    })
+    .addCase(getHourWorkedMonth.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+    })
+    .addCase(getHourWorkedDay.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+  })
+  .addCase(getHourWorkedDay.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+      state.hourWorkedDay = action.payload; 
+  })
+  .addCase(getHourWorkedDay.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+  })
          
            
     },

@@ -44,9 +44,10 @@ public class SecurityConfig {
                         .authorizeHttpRequests(
                                 authorize->
                                         authorize.requestMatchers("/loginAdmin").permitAll()
-                                                .requestMatchers("/api/v1/workTime/**").permitAll()
                                                 .requestMatchers("/loginEmployee").permitAll()
+                                                .requestMatchers("/api/v1/workTime/**").permitAll()
                                                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                                                .requestMatchers("/api/v1/workTime/**").hasRole("ADMIN")
                                                 .requestMatchers("*").authenticated()
                         )
                         .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(jwtAuthenticationEntryPoint))
