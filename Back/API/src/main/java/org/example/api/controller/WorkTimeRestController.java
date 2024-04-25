@@ -72,7 +72,7 @@ public class WorkTimeRestController {
         return weeklySummary;
     }
 
-    //Méthode pour renvoyer numéro de semaines
+    //Méthode pour renvoyer numéro de semaine
     @GetMapping("/getWeekNumber")
     public int getWeekNumber(LocalDate date) {
         Calendar calendar = Calendar.getInstance();

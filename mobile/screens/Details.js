@@ -69,7 +69,7 @@ const Details = () => {
     return (
         <View style={styles.container}>
  <View style={styles.container}>
-      <Text>Sélectionnez une semaine :</Text>
+      <Text>Select a week :</Text>
       <Picker
         selectedValue={weekNumber}
         onValueChange={(itemValue, itemIndex) => handleWeekChange(itemValue)}
