@@ -3,17 +3,39 @@ import WorkTimeButton from '../components/WorkTimeButton';
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {getLastStatus, getWeekNumber} from './workTimeSlice';
-import {getEmployeeById} from './EmployeeSlice';
-import {accountService} from './accountService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WorkTime = () => {
-  const API_URL = 'http://10.0.2.2:8090/api/v1/workTime';
   const dispatch = useDispatch();
+  const [id, setId]= useState("");
+  const [employee, setEmployee] = useState({})
 
-  const id = accountService.getId();
+
+  const getid =()=>{ AsyncStorage.getItem('id').then(value =>{
+    setId(value);
+  })}
+
+
+  const fetchEmployeeById = async (id) => {
+    try {
+      const response = await fetch(`http://10.0.2.2:8090/admin/employee/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },); 
+      const data = await response.json();
+      await setEmployee(data);
+    
+    } catch (error) {
+      console.error('Error fetching employee data:', error);
+    }
+  };
+
+
   const lastStatus = useSelector(state => state.workTime.lastStatus);
   const weekNumber = useSelector(state => state.workTime.weekNumber);
-  const employee = useSelector(state => state.employees.selectedEmployee);
   const [currentDate, setCurrentDate] = useState('');
   const getCurrentDate = () => {
     const date = new Date();
@@ -25,13 +47,15 @@ const WorkTime = () => {
   };
 
   useEffect(() => {
+    getid()
     setCurrentDate(getCurrentDate());
-    dispatch(getEmployeeById(id));
     dispatch(getLastStatus());
     dispatch(getWeekNumber(currentDate));
+    fetchEmployeeById(id)
     console.log('weeknumber' + weekNumber);
     console.log('status' + lastStatus);
-  }, [dispatch, lastStatus, weekNumber, id]);
+
+  }, [dispatch, lastStatus, weekNumber,id]);
 
   return (
     <View style={styles.container}>

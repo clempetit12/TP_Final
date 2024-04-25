@@ -1,34 +1,15 @@
 import React, {useState} from 'react';
 import {View, TextInput, Button, StyleSheet, Alert, Text} from 'react-native';
-import {accountService} from './accountService';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
-import {login} from './LoginSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getUserDetails} from '../service/UserDetails';
+
 
 const LoginPage = () => {
   const BASE_API_URL = 'http://10.0.2.2:8090';
-  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [apiResponse, setApiResponse] = useState(null);
-
-  // const handleLogin = async () => {
-  //   try {
-  //     await dispatch(login({ email, password }));
-  //     // accountService.logout()
-  //     // accountService.getToken();
-  //     if(accountService.isLogged()){
-  //       navigation.navigate('WorkTime');
-  //     }
-
-  //   } catch (error) {
-  //     console.error('Erreur lors de la connexion :', error);
-  //     Alert.alert('Erreur lors de la connexion', error.message || 'Une erreur est survenue lors de la connexion');
-  //   }
-  // };
 
   const handleLogin = async () => {
     try {
@@ -49,9 +30,11 @@ const LoginPage = () => {
       console.log(data);
 
       if (data && data.data && data.data.token) {
-        // Enregistrement du token et de l'id dans le local storage
-        await accountService.saveToken(data.data.token);
-        await accountService.saveId(data.data.id);
+        await AsyncStorage.setItem('token', data.data.token);
+        await AsyncStorage.setItem('id', data.data.id.toString());
+         AsyncStorage.getItem('id').then(value =>{
+         })
+
         navigation.navigate('WorkTime');
       } else {
         throw new Error('Erreur lors de la connexion');

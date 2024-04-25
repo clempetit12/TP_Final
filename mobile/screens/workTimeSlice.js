@@ -1,15 +1,20 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import {accountService} from './accountService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const API_URL = 'http://10.0.2.2:8090/api/v1/workTime';
+
+
+
+const employeeId = AsyncStorage.getItem('id').then(value =>{
+  return value;
+ })
 
 export const addWorkTime = createAsyncThunk(
   'workTime/addWorkTime',
   async ({clocking}) => {
-    const employeeId = accountService.getId();
     console.log('add');
     try {
       const response = await fetch(
-        `${API_URL}/addWorkTime?employeeId=${employeeId}&clocking=${clocking}`,
+        `${API_URL}/addWorkTime?employeeId=${+employeeId}&clocking=${clocking}`,
         {
           method: 'POST',
           headers: {
@@ -32,11 +37,11 @@ export const getLastStatus = createAsyncThunk(
   'workTime/lastStatus',
   async () => {
     try {
-      const employeeId = accountService.getId();
+      // const employeeId = 1;
       const currentDate = getCurrentDate();
       console.log('currentdate' + currentDate);
       const response = await fetch(
-        `${API_URL}/lastStatusEmployee?id=${employeeId}&date=${currentDate}`,
+        `${API_URL}/lastStatusEmployee?id=${+employeeId}&date=${currentDate}`,
         {
           method: 'GET',
           headers: {
@@ -88,9 +93,9 @@ export const getWeeklySummary = createAsyncThunk(
   'workTime/weeklySummary',
   async ({weekNumber}) => {
     try {
-      const employeeId = accountService.getId();
+      // const employeeId = 1;
       const response = await fetch(
-        `${API_URL}/weeklySummary?weekNumber=${weekNumber}&employeeId=${employeeId}`,
+        `${API_URL}/weeklySummary?weekNumber=${weekNumber}&employeeId=${+employeeId}`,
         {
           method: 'GET',
           headers: {
@@ -114,11 +119,11 @@ export const getHoursPerWeek = createAsyncThunk(
   'workTime/HoursPerWeek',
   async () => {
     try {
-      const employeeId = accountService.getId();
+      // const employeeId = 1
       const currentDate = getCurrentDate();
       console.log('currentdate' + currentDate);
       const response = await fetch(
-        `${API_URL}/weeklySummary?id=${employeeId}&date=${currentDate}`,
+        `${API_URL}/weeklySummary?id=${+employeeId}&date=${currentDate}`,
         {
           method: 'GET',
           headers: {
